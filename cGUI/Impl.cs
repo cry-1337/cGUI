@@ -1,0 +1,102 @@
+using System.Collections.Generic;
+
+namespace cGUI;
+
+public abstract class VisualElement(string id) : IVisualElement
+{
+    public string Id => id;
+
+    public bool IsActive { get; set; }
+
+    public bool IsHittable { get; set; }
+
+    public bool IsMaskable { get; set; }
+
+    public Rectangle Bounds { get; set; }
+
+    public IContainer Parent { get; private set; }
+
+    public bool HitTest(Point point, out HitTestResult result)
+    {
+        if (IsActive && IsHittable)
+        {
+            Rectangle bounds = Bounds;
+
+            if (bounds.Contains(point))
+            {
+                result = new HitTestResult(this, point.ConvertToLocalPoint(bounds));
+                return true;
+            }
+        }
+
+        result = default;
+        return false;
+    }
+
+    internal protected virtual void OnParentChanged(IContainer container) => Parent = container;
+
+    protected abstract void OnRender(RenderEvent e);
+
+    void IEventHandler<RenderEvent>.Handle(RenderEvent e) => OnRender(e);
+}
+
+public abstract class VisualContainer<TVisualElement>(string id) : VisualElement(id), IContainer<TVisualElement> where TVisualElement : VisualElement
+{
+    private readonly List<TVisualElement> m_Elements = [];
+
+    public int Count => m_Elements.Count;
+
+    public void Add(TVisualElement element)
+    {
+        m_Elements.Add(element);
+        element.OnParentChanged(this);
+    }
+
+    public void Add(TVisualElement element, int index)
+    {
+        m_Elements.Insert(index, element);
+        element.OnParentChanged(this);
+    }
+
+    void IContainer.Add(IElement element)
+    {
+        if(element is not TVisualElement visualElement) return;
+        Add(visualElement);
+    }
+
+    void IContainer.Add(IElement element, int index)
+    {
+        if(element is not TVisualElement visualElement) return;
+        Add(visualElement, index);
+    }
+
+    public bool Has(string id) => FindIndex(id) is not -1;
+
+    public bool Has(int index) => index >= 0 && index < Count;
+
+    public void Remove(string id) => Remove(FindIndex(id));
+
+    public void Remove(int index)
+    {
+        Find(index).OnParentChanged(null);
+        m_Elements.RemoveAt(index);
+    }
+
+    public int FindIndex(string id) => m_Elements.FindIndex(e => e.Id == id);
+
+    public TVisualElement Find(string id) => Find(FindIndex(id));
+
+    public TVisualElement Find(int index) => m_Elements[index];
+
+    IElement IContainer.Find(string id) => Find(id);
+
+    IElement IContainer.Find(int index) => Find(index);
+}
+
+public class EventDispatcher : IEventDispatcher
+{
+    public void Dispatch<TEvent>(IElement root, TEvent e)
+    {
+        
+    }
+}
