@@ -16,7 +16,7 @@ public abstract class VisualElement(string id) : IVisualElement
 
     public IContainer Parent { get; private set; }
 
-    public bool HitTest(Point point, out HitTestResult result)
+    public virtual bool HitTest(Point point, out HitTestResult result)
     {
         if (IsActive && IsHittable)
         {
@@ -88,6 +88,28 @@ public abstract class VisualContainer<TVisualElement>(string id) : VisualElement
 
     public TVisualElement Find(int index) => m_Elements[index];
 
+    public sealed override bool HitTest(Point point, out HitTestResult result)
+    {
+        if(!base.HitTest(point, out result)) return false;
+
+        var localPoint = point.ConvertToLocalPoint(Bounds);
+        
+        foreach (var element in m_Elements)
+        {
+            if(!element.HitTest(localPoint, out var localHit)) continue;
+            result = localHit;
+            break;
+        }
+
+        return true;
+    }
+
+    protected override void OnRender(RenderEvent e) => RenderElements(e);
+
+    protected virtual void RenderElements(RenderEvent e) => m_Elements.ForEach(element => RenderElement(e, element));
+
+    protected virtual void RenderElement<TElement>(RenderEvent e, TElement element) where TElement : VisualElement, IEventHandler<RenderEvent> => element.Handle(e);
+
     IElement IContainer.Find(string id) => Find(id);
 
     IElement IContainer.Find(int index) => Find(index);
@@ -99,4 +121,9 @@ public class EventDispatcher : IEventDispatcher
     {
         
     }
+}
+
+public class EventProcessor
+{
+    
 }
