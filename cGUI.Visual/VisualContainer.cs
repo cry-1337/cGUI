@@ -3,10 +3,11 @@ using cGUI.Abstraction.Structs;
 using cGUI.Event.Abstraction;
 using cGUI.Events.Models;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace cGUI.Visual;
 
-public abstract class VisualContainer<TVisualElement>(string id) : VisualElement(id), IContainer<TVisualElement> where TVisualElement : VisualElement
+public abstract class VisualContainer<TVisualElement>(string id) : VisualElement(id), IEventsHandler, IContainer<TVisualElement> where TVisualElement : VisualElement
 {
     private readonly List<TVisualElement> m_Elements = [];
 
@@ -85,4 +86,10 @@ public abstract class VisualContainer<TVisualElement>(string id) : VisualElement
     protected virtual void LayoutElements(LayoutEvent e) => m_Elements.ForEach(element => LayoutElement(e, element));
 
     protected virtual void LayoutElement<TElement>(LayoutEvent e, TElement element) where TElement : VisualElement, IEventHandler<LayoutEvent> => element.Handle(e);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void HandleEvents<TEvent>(in TEvent reason) where TEvent : IEvent
+    {
+        foreach (var element in m_Elements) if (element is IEventHandler<TEvent> handler) handler.Handle(reason);
+    }
 }

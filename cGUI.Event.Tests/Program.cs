@@ -20,11 +20,10 @@ public class Program
         container.Add(new ButtonElement("123", disp));
         container.Add(new ButtonElement("53", disp));
 
-        disp.Dispatch<RenderEvent>(container, new(), true);
+        disp.Spread<RenderEvent>(container, new());
 
-        // dont work @todo: fix
-        disp.Dispatch<MouseClickEvent>(container, new(), true);
-        disp.Dispatch<MouseClickEvent>(container, new(), false);
+        disp.Spread<MouseClickEvent>(container, new());
+        disp.Spread<MouseClickEvent>(container, new());
 
         Console.ReadLine();
     }
