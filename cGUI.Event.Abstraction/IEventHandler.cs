@@ -1,10 +1,6 @@
 ﻿namespace cGUI.Event.Abstraction;
 
-public interface IEventHandler<in TEvent> : IEventHandler where TEvent : IEvent
+public interface IEventHandler<TEvent> where TEvent : IEvent
 {
-    bool Handle(TEvent reason);
-}
-public interface IEventHandler
-{
-    bool Handle(IEvent reason);
+    bool Handle(in TEvent reason);
 }

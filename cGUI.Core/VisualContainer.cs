@@ -1,13 +1,10 @@
 ﻿using cGUI.Abstraction.Interfaces;
 using cGUI.Abstraction.Structs;
-using cGUI.Event.Abstraction;
 using System.Collections.Generic;
 
 namespace cGUI.Core;
 
-public abstract class VisualContainer<TEvent, TVisualElement>(string id) : VisualElement<TEvent>(id), IContainer<TVisualElement>
-    where TVisualElement : VisualElement<TEvent>
-    where TEvent : IEvent
+public abstract class VisualContainer<TEvent, TVisualElement>(string id) : VisualElement(id), IContainer<TVisualElement> where TVisualElement : VisualElement
 {
     private readonly List<TVisualElement> m_Elements = [];
 

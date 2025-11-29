@@ -5,7 +5,7 @@ using cGUI.Visual.Abstraction;
 
 namespace cGUI.Core;
 
-public abstract class VisualElement<TEvent>(string id) : IVisualElement<TEvent> where TEvent : IEvent
+public abstract class VisualElement(string id) : IVisualElement
 {
     public string Id => id;
 
@@ -37,8 +37,4 @@ public abstract class VisualElement<TEvent>(string id) : IVisualElement<TEvent> 
     }
 
     internal protected virtual void OnParentChanged(IContainer container) => Parent = container;
-
-    public abstract bool Handle(TEvent reason);
-
-    bool IEventHandler.Handle(IEvent reason) => reason is TEvent e && Handle(e);
 }

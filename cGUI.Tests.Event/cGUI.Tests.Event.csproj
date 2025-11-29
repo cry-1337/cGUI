@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cGUI.Core\cGUI.Core.csproj" />
+    <ProjectReference Include="..\cGUI.Event\cGUI.Event.csproj" />
+  </ItemGroup>
+
+</Project>
