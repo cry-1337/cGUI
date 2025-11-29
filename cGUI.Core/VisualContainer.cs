@@ -1,44 +1,10 @@
+﻿using cGUI.Abstraction.Interfaces;
+using cGUI.Abstraction.Structs;
+using cGUI.Event.Abstraction;
+using cGUI.Visual.Abstraction;
 using System.Collections.Generic;
 
-namespace cGUI;
-
-public abstract class VisualElement(string id) : IVisualElement
-{
-    public string Id => id;
-
-    public bool IsActive { get; set; }
-
-    public bool IsHittable { get; set; }
-
-    public bool IsMaskable { get; set; }
-
-    public Rectangle Bounds { get; set; }
-
-    public IContainer Parent { get; private set; }
-
-    public virtual bool HitTest(Point point, out HitTestResult result)
-    {
-        if (IsActive && IsHittable)
-        {
-            Rectangle bounds = Bounds;
-
-            if (bounds.Contains(point))
-            {
-                result = new HitTestResult(this, point.ConvertToLocalPoint(bounds));
-                return true;
-            }
-        }
-
-        result = default;
-        return false;
-    }
-
-    internal protected virtual void OnParentChanged(IContainer container) => Parent = container;
-
-    protected abstract void OnRender(RenderEvent e);
-
-    void IEventHandler<RenderEvent>.Handle(RenderEvent e) => OnRender(e);
-}
+namespace cGUI.Core;
 
 public abstract class VisualContainer<TVisualElement>(string id) : VisualElement(id), IContainer<TVisualElement> where TVisualElement : VisualElement
 {
@@ -60,13 +26,13 @@ public abstract class VisualContainer<TVisualElement>(string id) : VisualElement
 
     void IContainer.Add(IElement element)
     {
-        if(element is not TVisualElement visualElement) return;
+        if (element is not TVisualElement visualElement) return;
         Add(visualElement);
     }
 
     void IContainer.Add(IElement element, int index)
     {
-        if(element is not TVisualElement visualElement) return;
+        if (element is not TVisualElement visualElement) return;
         Add(visualElement, index);
     }
 
@@ -90,13 +56,13 @@ public abstract class VisualContainer<TVisualElement>(string id) : VisualElement
 
     public sealed override bool HitTest(Point point, out HitTestResult result)
     {
-        if(!base.HitTest(point, out result)) return false;
+        if (!base.HitTest(point, out result)) return false;
 
         var localPoint = point.ConvertToLocalPoint(Bounds);
-        
+
         foreach (var element in m_Elements)
         {
-            if(!element.HitTest(localPoint, out var localHit)) continue;
+            if (!element.HitTest(localPoint, out var localHit)) continue;
             result = localHit;
             break;
         }
@@ -113,17 +79,4 @@ public abstract class VisualContainer<TVisualElement>(string id) : VisualElement
     IElement IContainer.Find(string id) => Find(id);
 
     IElement IContainer.Find(int index) => Find(index);
-}
-
-public class EventDispatcher : IEventDispatcher
-{
-    public void Dispatch<TEvent>(IElement root, TEvent e)
-    {
-        
-    }
-}
-
-public class EventProcessor
-{
-    
 }

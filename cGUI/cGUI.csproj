@@ -1,6 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net481; netstandard2.1</TargetFrameworks>
-    <LangVersion>preview</LangVersion>
-  </PropertyGroup>
-</Project>
