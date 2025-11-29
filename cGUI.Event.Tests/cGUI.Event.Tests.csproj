@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\cGUI.Core\cGUI.Core.csproj" />
+    <ProjectReference Include="..\cGUI.Event.Extensions\cGUI.Event.Extensions.csproj" />
     <ProjectReference Include="..\cGUI.Event\cGUI.Event.csproj" />
   </ItemGroup>
 

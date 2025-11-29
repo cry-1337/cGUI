@@ -1,9 +1,10 @@
 ﻿using cGUI.Abstraction.Interfaces;
 using cGUI.Abstraction.Structs;
 using cGUI.Event.Abstraction;
+using cGUI.Events.Models;
 using cGUI.Visual.Abstraction;
 
-namespace cGUI.Core;
+namespace cGUI.Visual;
 
 public abstract class VisualElement(string id) : IVisualElement
 {
@@ -35,6 +36,13 @@ public abstract class VisualElement(string id) : IVisualElement
         result = default;
         return false;
     }
+
+    public abstract void OnLayout(LayoutEvent reason);
+    public abstract void OnRender(RenderEvent reason);
+
+    bool IEventHandler<LayoutEvent>.Handle(LayoutEvent reason) { OnLayout(reason); return true; }
+
+    bool IEventHandler<RenderEvent>.Handle(RenderEvent reason) { OnRender(reason); return true; }
 
     internal protected virtual void OnParentChanged(IContainer container) => Parent = container;
 }

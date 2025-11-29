@@ -1,10 +1,12 @@
 ﻿using cGUI.Abstraction.Interfaces;
 using cGUI.Abstraction.Structs;
+using cGUI.Event.Abstraction;
+using cGUI.Events.Models;
 using System.Collections.Generic;
 
-namespace cGUI.Core;
+namespace cGUI.Visual;
 
-public abstract class VisualContainer<TEvent, TVisualElement>(string id) : VisualElement(id), IContainer<TVisualElement> where TVisualElement : VisualElement
+public abstract class VisualContainer<TVisualElement>(string id) : VisualElement(id), IContainer<TVisualElement> where TVisualElement : VisualElement
 {
     private readonly List<TVisualElement> m_Elements = [];
 
@@ -71,4 +73,16 @@ public abstract class VisualContainer<TEvent, TVisualElement>(string id) : Visua
     IElement IContainer.Find(string id) => Find(id);
 
     IElement IContainer.Find(int index) => Find(index);
+
+    public override void OnRender(RenderEvent e) => RenderElements(e);
+
+    protected virtual void RenderElements(RenderEvent e) => m_Elements.ForEach(element => RenderElement(e, element));
+
+    protected virtual void RenderElement<TElement>(RenderEvent e, TElement element) where TElement : VisualElement, IEventHandler<RenderEvent> => element.Handle(e);
+
+    public override void OnLayout(LayoutEvent e) => LayoutElements(e);
+
+    protected virtual void LayoutElements(LayoutEvent e) => m_Elements.ForEach(element => LayoutElement(e, element));
+
+    protected virtual void LayoutElement<TElement>(LayoutEvent e, TElement element) where TElement : VisualElement, IEventHandler<LayoutEvent> => element.Handle(e);
 }
