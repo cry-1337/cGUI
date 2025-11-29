@@ -1,12 +1,13 @@
 ﻿using cGUI.Abstraction.Interfaces;
 using cGUI.Abstraction.Structs;
 using cGUI.Event.Abstraction;
-using cGUI.Visual.Abstraction;
 using System.Collections.Generic;
 
 namespace cGUI.Core;
 
-public abstract class VisualContainer<TVisualElement>(string id) : VisualElement(id), IContainer<TVisualElement> where TVisualElement : VisualElement
+public abstract class VisualContainer<TEvent, TVisualElement>(string id) : VisualElement<TEvent>(id), IContainer<TVisualElement>
+    where TVisualElement : VisualElement<TEvent>
+    where TEvent : IEvent
 {
     private readonly List<TVisualElement> m_Elements = [];
 
@@ -54,7 +55,7 @@ public abstract class VisualContainer<TVisualElement>(string id) : VisualElement
 
     public TVisualElement Find(int index) => m_Elements[index];
 
-    public sealed override bool HitTest(Point point, out HitTestResult result)
+    public sealed override bool HitTest(GUIPoint point, out HitTestResult result)
     {
         if (!base.HitTest(point, out result)) return false;
 
@@ -69,12 +70,6 @@ public abstract class VisualContainer<TVisualElement>(string id) : VisualElement
 
         return true;
     }
-
-    protected override void OnRender(RenderEvent e) => RenderElements(e);
-
-    protected virtual void RenderElements(RenderEvent e) => m_Elements.ForEach(element => RenderElement(e, element));
-
-    protected virtual void RenderElement<TElement>(RenderEvent e, TElement element) where TElement : VisualElement, IEventHandler<RenderEvent> => element.Handle(e);
 
     IElement IContainer.Find(string id) => Find(id);
 

@@ -2,8 +2,8 @@
 
 namespace cGUI.Abstraction.Structs;
 
-public readonly struct HitTestResult(IElement element, Point point)
+public readonly struct HitTestResult(IElement element, GUIPoint point)
 {
     public readonly IElement m_Element = element;
-    public readonly Point m_Point = point;
+    public readonly GUIPoint m_Point = point;
 }

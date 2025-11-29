@@ -1,6 +1,6 @@
 ﻿namespace cGUI.Abstraction.Structs;
 
-public readonly struct GUIRectangle
+public readonly struct Rectangle
 {
     public readonly float m_X, m_Y, m_Width, m_Height;
 

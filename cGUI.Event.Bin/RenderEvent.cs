@@ -1,5 +1,5 @@
 ﻿using cGUI.Event.Abstraction;
 
-namespace cGUI.Visual.Abstraction;
+namespace cGUI.Event.Bin;
 
 public readonly struct RenderEvent : IEvent;

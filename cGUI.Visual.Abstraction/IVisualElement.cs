@@ -3,7 +3,7 @@ using cGUI.Event.Abstraction;
 
 namespace cGUI.Visual.Abstraction;
 
-public interface IVisualElement : IElement, IEventHandler<RenderEvent>
+public interface IVisualElement<TEvent> : IElement, IEventHandler<TEvent> where TEvent : IEvent
 {
     bool IsMaskable { get; }
 }

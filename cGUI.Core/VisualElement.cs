@@ -5,7 +5,7 @@ using cGUI.Visual.Abstraction;
 
 namespace cGUI.Core;
 
-public abstract class VisualElement(string id) : IVisualElement
+public abstract class VisualElement<TEvent>(string id) : IVisualElement<TEvent> where TEvent : IEvent
 {
     public string Id => id;
 
@@ -19,7 +19,7 @@ public abstract class VisualElement(string id) : IVisualElement
 
     public IContainer Parent { get; private set; }
 
-    public virtual bool HitTest(Point point, out HitTestResult result)
+    public virtual bool HitTest(GUIPoint point, out HitTestResult result)
     {
         if (IsActive && IsHittable)
         {
@@ -38,7 +38,7 @@ public abstract class VisualElement(string id) : IVisualElement
 
     internal protected virtual void OnParentChanged(IContainer container) => Parent = container;
 
-    protected abstract void OnRender(RenderEvent e);
+    public abstract bool Handle(TEvent reason);
 
-    void IEventHandler<RenderEvent>.Handle(RenderEvent e) => OnRender(e);
+    bool IEventHandler.Handle(IEvent reason) => reason is TEvent e && Handle(e);
 }

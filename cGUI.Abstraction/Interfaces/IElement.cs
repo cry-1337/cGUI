@@ -14,5 +14,5 @@ public interface IElement
 
     IContainer Parent { get; }
 
-    bool HitTest(Point point, out HitTestResult result);
+    bool HitTest(GUIPoint point, out HitTestResult result);
 }
