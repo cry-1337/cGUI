@@ -17,8 +17,8 @@ public class Program
         var disp = new EventDispatcher();
 
         var container = new Container("321");
-        container.Add(new ButtonElement("123", disp));
-        container.Add(new ButtonElement("53", disp));
+        container.Add(new ButtonElement("123"));
+        container.Add(new ButtonElement("53"));
 
         disp.Spread<RenderEvent>(container, new());
 

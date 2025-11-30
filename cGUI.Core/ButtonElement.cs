@@ -11,13 +11,8 @@ public struct MouseClickEvent : IEvent
 
 }
 
-public class ButtonElement : VisualElement, IEventMicroController<MouseClickEvent>, IEventHandler<MouseClickEvent>
+public class ButtonElement(string id) : VisualElement(id), IEventMicroController<MouseClickEvent>, IEventHandler<MouseClickEvent>
 {
-    public ButtonElement(string id, IEventDispatcher dispatcher) : base(id)
-    {
-        dispatcher.Register<MouseClickEvent>(this);
-    }
-
     public override void OnLayout(LayoutEvent reason)
     {
     }
