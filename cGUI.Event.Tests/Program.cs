@@ -1,6 +1,7 @@
-﻿using cGUI.Core;
+﻿using cGUI.Abstraction.Structs;
 using cGUI.Event.Extensions;
 using cGUI.Events.Models;
+using cGUI.Render.Abstraction;
 using cGUI.Visual;
 using System;
 
@@ -12,18 +13,27 @@ public class Program
     {
     }
 
+    private class TestElement(string id) : VisualElement(id)
+    {
+        public override void OnLayout(LayoutEvent reason)
+        {
+        }
+
+        public override void OnRender(RenderEvent reason)
+        {
+        }
+    }
+
     private static void Main(string[] args)
     {
         var disp = new EventDispatcher();
 
         var container = new Container("321");
-        container.Add(new ButtonElement("123"));
-        container.Add(new ButtonElement("53"));
+        container.Add(new TestElement("123"));
+        container.Add(new TestElement("53"));
 
         disp.Spread<RenderEvent>(container, new());
-
-        disp.Spread<MouseClickEvent>(container, new());
-        disp.Spread<MouseClickEvent>(container, new());
+        disp.Spread<LayoutEvent>(container, new());
 
         Console.ReadLine();
     }

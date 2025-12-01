@@ -1,10 +1,57 @@
-﻿namespace cGUI.Abstraction.Structs;
+﻿using cGUI.Abstraction.Interfaces;
+using cGUI.Math;
 
-public readonly struct Rectangle
+namespace cGUI.Abstraction.Structs;
+
+public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
 {
-    public readonly float m_X, m_Y, m_Width, m_Height;
+    private float m_X, m_Y, m_Width, m_Height;
 
-    public GUIPoint Point => new();
+    public float X
+    {
+        readonly get => m_X; set => m_X = value;
+    }
+    public float Y
+    {
+        readonly get => m_Y; set => m_Y = value;
+    }
+    public float Width
+    {
+        readonly get => m_Width; set => m_Width = value;
+    }
+    public float Height
+    {
+        readonly get => m_Height; set => m_Height = value;
+    }
+
+    public readonly GUIPoint Position => new(m_X, m_Y);
+    public readonly GUIPoint Size => new(m_Width, m_Height);
+
+    public GUIRectangle(float x, float y, float width, float height)
+    {
+        m_X = x;
+        m_Y = y;
+        m_Width = width;
+        m_Height = height;
+    }
+
+    public GUIRectangle(GUIPoint position, GUIPoint size)
+    {
+        m_X = position.m_X;
+        m_Y = position.m_Y;
+        m_Width = size.m_X;
+        m_Height = size.m_Y;
+    }
 
     public readonly bool Contains(GUIPoint point) => point.m_X >= m_X && point.m_Y >= m_Y && point.m_X <= m_Width && point.m_Y <= m_Height;
+
+    public GUIRectangle Lerp(GUIRectangle b, float t)
+    {
+        m_X = GUIMath.Lerp(m_X, b.m_X, t);
+        m_Y = GUIMath.Lerp(m_Y, b.m_Y, t);
+        m_Width = GUIMath.Lerp(m_Width, b.m_Width, t);
+        m_Height = GUIMath.Lerp(m_Height, b.m_Height, t);
+
+        return this;
+    }
 }

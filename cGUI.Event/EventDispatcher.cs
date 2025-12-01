@@ -1,40 +1,52 @@
-﻿using cGUI.Abstraction.Interfaces;
-using cGUI.Event.Abstraction;
+﻿using cGUI.Event.Abstraction;
 using System.Collections.Generic;
 
 namespace cGUI.Event;
 
 public sealed class EventDispatcher : IEventDispatcher
 {
-    public void Dispatch<TEvent>(IElement root, TEvent e) where TEvent : IEvent 
-    { 
-        if (EventStorage<TEvent>.Handlers.TryGetValue(root, out var list))
-           list.ForEach(x => x.Handle(e));
-    }
-    
-    public void Register<TEvent>(IElement root, IEventHandler<TEvent> handler) where TEvent : IEvent
+    public void Dispatch<TEvent, TOwnerKey>(TOwnerKey ownerKey, TEvent e)
+        where TEvent : IEvent
+        where TOwnerKey : notnull
     {
-        if (!EventStorage<TEvent>.Handlers.TryGetValue(root, out var list))
-        {
-            list = [];
-            EventStorage<TEvent>.Handlers.Add(root, list);
-        }
-        list.Add(handler);
-    }
-    
-    public void Unregister<TEvent>(IElement root, IEventHandler<TEvent> handler) where TEvent : IEvent
-    {
-        if (EventStorage<TEvent>.Handlers.TryGetValue(root, out var list))
-        {
-            list.Remove(handler);
-    
-            if (list.Count == 0)
-                EventStorage<TEvent>.Handlers.Remove(root);
-        }
+        if (!EventStorage<TEvent, TOwnerKey>.Handlers.TryGetValue(ownerKey, out var list))
+            return;
+
+        for (int i = 0; i < list.Count; i++)
+            list[i].Handle(e);
     }
 
-    private static class EventStorage<TEvent> where TEvent : IEvent
+    public void Register<TEvent, TOwnerKey>(TOwnerKey ownerKey, IEventHandler<TEvent> handler)
+        where TEvent : IEvent
+        where TOwnerKey : notnull
     {
-        public static readonly Dictionary<IElement, List<IEventHandler<TEvent>>> Handlers = [];
+        if (!EventStorage<TEvent, TOwnerKey>.Handlers.TryGetValue(ownerKey, out var list))
+        {
+            list = [];
+            EventStorage<TEvent, TOwnerKey>.Handlers.Add(ownerKey, list);
+        }
+
+        if (!list.Contains(handler))
+            list.Add(handler);
+    }
+
+    public void Unregister<TEvent, TOwnerKey>(TOwnerKey ownerKey, IEventHandler<TEvent> handler)
+        where TEvent : IEvent
+        where TOwnerKey : notnull
+    {
+        if (!EventStorage<TEvent, TOwnerKey>.Handlers.TryGetValue(ownerKey, out var list))
+            return;
+
+        list.Remove(handler);
+
+        if (list.Count == 0)
+            EventStorage<TEvent, TOwnerKey>.Handlers.Remove(ownerKey);
+    }
+
+    private static class EventStorage<TEvent, TOwnerKey>
+        where TEvent : IEvent
+        where TOwnerKey : notnull
+    {
+        public static readonly Dictionary<TOwnerKey, List<IEventHandler<TEvent>>> Handlers = new();
     }
 }

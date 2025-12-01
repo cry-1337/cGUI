@@ -16,7 +16,7 @@ public abstract class VisualElement(string id) : IVisualElement
 
     public bool IsMaskable { get; set; }
 
-    public Rectangle Bounds { get; set; }
+    public GUIRectangle Bounds { get; set; }
 
     public IContainer Parent { get; private set; }
 
@@ -24,7 +24,7 @@ public abstract class VisualElement(string id) : IVisualElement
     {
         if (IsActive && IsHittable)
         {
-            Rectangle bounds = Bounds;
+            GUIRectangle bounds = Bounds;
 
             if (bounds.Contains(point))
             {

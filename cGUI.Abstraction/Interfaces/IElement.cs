@@ -10,7 +10,7 @@ public interface IElement
 
     bool IsHittable { get; }
 
-    Rectangle Bounds { get; }
+    GUIRectangle Bounds { get; }
 
     IContainer Parent { get; }
 

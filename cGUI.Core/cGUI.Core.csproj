@@ -1,9 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\cGUI.Abstraction\cGUI.Abstraction.csproj" />
-    <ProjectReference Include="..\cGUI.Event.Abstraction\cGUI.Event.Abstraction.csproj" />
-    <ProjectReference Include="..\cGUI.Event.Extensions\cGUI.Event.Extensions.csproj" />
-    <ProjectReference Include="..\cGUI.Visual.Abstraction\cGUI.Visual.Abstraction.csproj" />
-    <ProjectReference Include="..\cGUI.Visual\cGUI.Visual.csproj" />
-  </ItemGroup>
-</Project>

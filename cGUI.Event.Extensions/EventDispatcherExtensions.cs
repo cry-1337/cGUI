@@ -1,5 +1,4 @@
-﻿using cGUI.Abstraction.Interfaces;
-using cGUI.Event.Abstraction;
+﻿using cGUI.Event.Abstraction;
 using cGUI.Events.Models;
 using cGUI.Visual.Abstraction;
 using System;
@@ -9,12 +8,12 @@ namespace cGUI.Event.Extensions;
 
 public static class EventDispatcherExtensions
 {
-    public static void Register<TEvent>(this IEventDispatcher dispatcher, IElement element) where TEvent : IEvent
+    public static void Register<TEventOwner, TEvent>(this IEventDispatcher dispatcher, TEventOwner owner) where TEvent : IEvent
     {
-        if (element is IEventHandler<TEvent> handler)
-            dispatcher.Register(element, handler);
+        if (owner is IEventHandler<TEvent> handler)
+            dispatcher.Register(owner, handler);
         else
-            throw new InvalidOperationException($"Element does not implement IEventHandler<{typeof(TEvent).Name}>");
+            throw new InvalidOperationException($"Owner does not implement IEventHandler<{typeof(TEvent).Name}>");
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

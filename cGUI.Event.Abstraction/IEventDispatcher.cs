@@ -4,7 +4,13 @@ namespace cGUI.Event.Abstraction;
 
 public interface IEventDispatcher
 {
-    public void Dispatch<TEvent>(IElement root, TEvent e) where TEvent : IEvent;
-    public void Register<TEvent>(IElement root, IEventHandler<TEvent> handler) where TEvent : IEvent;
-    public void Unregister<TEvent>(IElement root, IEventHandler<TEvent> handler) where TEvent : IEvent;
+    void Dispatch<TEvent, TOwnerKey>(TOwnerKey ownerKey, TEvent e)
+        where TEvent : IEvent
+        where TOwnerKey : notnull;
+    void Register<TEvent, TOwnerKey>(TOwnerKey ownerKey, IEventHandler<TEvent> handler)
+        where TEvent : IEvent
+        where TOwnerKey : notnull;
+    void Unregister<TEvent, TOwnerKey>(TOwnerKey ownerKey, IEventHandler<TEvent> handler)
+        where TEvent : IEvent
+        where TOwnerKey : notnull;
 }
