@@ -1,2 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="UnityEngine.CoreModule" Version="2020.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cGUI.Render.Abstraction\cGUI.Render.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Render.Contexts\cGUI.Render.Contexts.csproj" />
+  </ItemGroup>
 </Project>

@@ -2,6 +2,21 @@
 
 public partial struct GUIMath
 {
+    public static float Ceil(float f)
+    {
+        return (float) System.Math.Ceiling(f);
+    }
+
+    public static float Floor(float f)
+    {
+        return (float) System.Math.Floor(f);
+    }
+
+    public static float Round(float f)
+    {
+        return (float) System.Math.Round(f);
+    }
+
     public static int Clamp(int value, int min, int max)
     {
         if (value < min)
