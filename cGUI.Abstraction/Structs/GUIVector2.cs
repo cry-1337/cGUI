@@ -1,6 +1,17 @@
-﻿namespace cGUI.Abstraction.Structs;
+﻿using cGUI.Abstraction.Interfaces;
+using cGUI.Math;
 
-public readonly partial struct GUIVector2
+namespace cGUI.Abstraction.Structs;
+
+public partial struct GUIVector2(float x, float y) : IInterpolatable<GUIVector2>
 {
-    public readonly float m_X, m_Y;
+    public float X = x, Y = y;
+
+    public GUIVector2 Lerp(GUIVector2 b, float t)
+    {
+        X = GUIMath.Lerp(X, b.X, t);
+        Y = GUIMath.Lerp(Y, b.Y, t);
+
+        return this;
+    }
 }

@@ -37,13 +37,13 @@ public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
 
     public GUIRectangle(GUIPoint position, GUIPoint size)
     {
-        m_X = position.m_X;
-        m_Y = position.m_Y;
-        m_Width = size.m_X;
-        m_Height = size.m_Y;
+        m_X = position.x;
+        m_Y = position.y;
+        m_Width = size.x;
+        m_Height = size.y;
     }
 
-    public readonly bool Contains(GUIPoint point) => point.m_X >= m_X && point.m_Y >= m_Y && point.m_X <= m_Width && point.m_Y <= m_Height;
+    public readonly bool Contains(GUIPoint point) => point.x >= m_X && point.y >= m_Y && point.x <= m_Width && point.y <= m_Height;
 
     public GUIRectangle Lerp(GUIRectangle b, float t)
     {

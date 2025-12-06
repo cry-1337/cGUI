@@ -5,33 +5,30 @@ namespace cGUI.Abstraction.Structs;
 
 public struct GUIColor : IInterpolatable<GUIColor>
 {
-    public byte r;
-    public byte g;
-    public byte b;
-    public byte a;
+    public byte R, G, B, A;
 
     public GUIColor(byte r, byte g, byte b, byte a)
     {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
+        R = r;
+        G = g;
+        B = b;
+        A = a;
     }
 
     public GUIColor(GUIColor clr)
     {
-        r = clr.r;
-        g = clr.g;
-        b = clr.b;
-        a = clr.a;
+        R = clr.R;
+        G = clr.G;
+        B = clr.B;
+        A = clr.A;
     }
 
     public GUIColor Lerp(GUIColor target, float t)
     {
-        r = (byte) GUIMath.Lerp(r, target.r, t);
-        g = (byte) GUIMath.Lerp(g, target.g, t);
-        b = (byte) GUIMath.Lerp(b, target.b, t);
-        a = (byte) GUIMath.Lerp(a, target.a, t);
+        R = (byte) GUIMath.Lerp(R, target.R, t);
+        G = (byte) GUIMath.Lerp(G, target.G, t);
+        B = (byte) GUIMath.Lerp(B, target.B, t);
+        A = (byte) GUIMath.Lerp(A, target.A, t);
         return this;
     }
 }
