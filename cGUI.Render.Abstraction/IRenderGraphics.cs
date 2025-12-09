@@ -1,11 +1,16 @@
-﻿namespace cGUI.Render.Abstraction;
+﻿using cGUI.Abstraction.Structs;
+using System;
 
-public interface IRenderGraphics
+namespace cGUI.Render.Abstraction;
+
+public interface IRenderGraphics : IDisposable
 {
-    void Process(IRenderContext ctx);
+    void Process(in IRenderContext ctx);
+    void SetViewProjection(in GUIRectangle rect);
+    void ExecuteBuffer();
 }
 
-public interface IRenderGraphics<in TContext> : IRenderGraphics where TContext : class, IRenderContext
+public interface IRenderGraphics<in TContext> : IRenderGraphics where TContext : IRenderContext
 {
     void Process(TContext ctx);
 }

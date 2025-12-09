@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace cGUI.Unity.Render.Extensions;
 
-public static class RenderExtensions
+public static class ConvertExtensions
 {
     extension (GUIColor baseColor)
     {
@@ -41,6 +41,17 @@ public static class RenderExtensions
         {
             x = vector.X,
             y = vector.Y
+        };
+    }
+
+    extension(GUIRectangle rect)
+    {
+        public Vector4 ToVector4() => new()
+        {
+            x = rect.X,
+            y = rect.Y,
+            w = rect.Width,
+            z = rect.Height
         };
     }
 }

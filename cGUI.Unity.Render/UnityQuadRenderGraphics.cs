@@ -1,5 +1,7 @@
-﻿using cGUI.Render.Abstraction;
-using cGUI.Render.Contexts;
+﻿using cGUI.Abstraction.Structs;
+using cGUI.Render.Abstraction;
+using cGUI.Unity.Render.Abstraction;
+using cGUI.Unity.Render.Extensions;
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -7,17 +9,18 @@ using UnityEngine.Rendering;
 namespace cGUI.Unity.Render;
 
 /// <summary>
-/// Creates Render Graphics that can handle context.
-/// Works on meshes.
+/// Draws a Quad with Mesh help.
+/// Buffer should be executed to draw.
 /// </summary>
-/// <param name="material">Should be with some cool shader</param>
-public class UnityQuadRenderGraphics(Material material) : IRenderGraphics<IQuadRenderContext>, IDisposable
+/// <param name="material">Any material</param>
+public class UnityQuadRenderGraphics(Material material) : IRenderGraphics<IUnityQuadRenderContext>
 {
     private const MeshUpdateFlags MESH_UPDATE_FLAGS =
         MeshUpdateFlags.DontNotifyMeshUsers |
         MeshUpdateFlags.DontRecalculateBounds |
         MeshUpdateFlags.DontResetBoneBounds |
         MeshUpdateFlags.DontValidateIndices;
+
     private static readonly VertexAttributeDescriptor[] m_VertexAttributes =
     [
         new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 2),
@@ -44,7 +47,7 @@ public class UnityQuadRenderGraphics(Material material) : IRenderGraphics<IQuadR
 
     private Mesh m_Mesh;
 
-    public void Process(IQuadRenderContext ctx)
+    public void Process(IUnityQuadRenderContext ctx)
     {
         if (m_Mesh == null)
         {
@@ -73,22 +76,36 @@ public class UnityQuadRenderGraphics(Material material) : IRenderGraphics<IQuadR
             vertexCount = ctx.VerticiesCount
         }, MESH_UPDATE_FLAGS);
 
-        m_Mesh.UploadMeshData(false);
+        if (ctx.Texture != null) m_MaterialProperties.SetTexture(m_MainTexId, ctx.Texture);
+        m_MaterialProperties.SetFloat(m_InvColorMul, ctx.ColorAlphaMultiplier);
 
-        m_MaterialProperties.SetFloat(m_InvColorMul, 0f);
-        m_MaterialProperties.SetInteger(m_MaskEnabledId, 0);
+        if (ctx.MaskRectangle != null)
+        {
+            m_MaterialProperties.SetInteger(m_MaskEnabledId, 1);
+            m_MaterialProperties.SetVector(m_MaskRectId, ctx.MaskRectangle.Value.ToVector4());
+            m_MaterialProperties.SetFloat(m_MaskCornerRadiusId, ctx.CornerRadius);
+        }
+        else m_MaterialProperties.SetInteger(m_MaskEnabledId, 0);
 
+        m_Buffer.DrawMesh(m_Mesh, Matrix4x4.identity, m_Material, 0, -1, m_MaterialProperties);
+    }
+
+    public void Process(in IRenderContext ctx) => Process(ctx as IUnityQuadRenderContext);
+
+    public void SetViewProjection(in GUIRectangle rect)
+    {
         var view = Matrix4x4.identity;
-        var proj = Matrix4x4.Ortho(ctx.Rectangle.X, ctx.Rectangle.Width, ctx.Rectangle.Y, ctx.Rectangle.Height, short.MinValue, short.MaxValue);
+        var proj = Matrix4x4.Ortho(rect.X, rect.Width, rect.Y, rect.Height, short.MinValue, short.MaxValue);
         var gpuProj = GL.GetGPUProjectionMatrix(proj, true);
 
         m_Buffer.SetGlobalMatrix(m_ViewProjectionId, view * gpuProj);
-        m_Buffer.DrawMesh(m_Mesh, Matrix4x4.identity, m_Material, 0, -1, m_MaterialProperties);
-
-        Graphics.ExecuteCommandBuffer(m_Buffer);
     }
 
-    public void Process(IRenderContext ctx) => Process(ctx as IQuadRenderContext);
+    public void ExecuteBuffer()
+    {
+        Graphics.ExecuteCommandBuffer(m_Buffer);
+        m_Buffer.Clear();
+    }
 
     public void Dispose()
     {

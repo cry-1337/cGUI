@@ -1,6 +1,4 @@
-﻿using cGUI.Render.Abstraction;
-
-namespace cGUI.Render.Contexts;
+﻿namespace cGUI.Render.Abstraction;
 
 public interface IQuadRenderContext : IRenderContext
 {
