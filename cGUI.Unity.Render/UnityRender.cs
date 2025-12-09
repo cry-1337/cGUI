@@ -1,8 +1,6 @@
 ﻿using cGUI.Render.Abstraction;
-using cGUI.Unity.Render.Abstraction;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace cGUI.Unity.Render;
 

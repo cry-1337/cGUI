@@ -7,7 +7,8 @@ public class QuadRenderContextBuilder : IRenderContextBuilder<IQuadRenderContext
 {
     private IQuadRenderContext m_QuadRenderContext = new QuadRenderContext();
 
-    public IRenderContextBuilder<IQuadRenderContext> AddRect(in GUIRectangle rect)
+    public IRenderContextBuilder<IQuadRenderContext> AddRect(in GUIRectangle rect) => AddRect(rect, new());
+    public IRenderContextBuilder<IQuadRenderContext> AddRect(in GUIRectangle rect, in GUIRectangle radiusRect)
     {
         return this;
     }

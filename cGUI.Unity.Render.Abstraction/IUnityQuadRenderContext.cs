@@ -9,6 +9,5 @@ public interface IUnityQuadRenderContext : IQuadRenderContext
     Texture Texture { get; set; }
     GUIRectangle? ClipRectangle { get; set; }
     GUIRectangle? MaskRectangle { get; set; }
-    float CornerRadius { get; set; }
     float ColorAlphaMultiplier { get; set; }
 }

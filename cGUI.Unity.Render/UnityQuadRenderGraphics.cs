@@ -83,7 +83,7 @@ public class UnityQuadRenderGraphics(Material material) : IRenderGraphics<IUnity
         {
             m_MaterialProperties.SetInteger(m_MaskEnabledId, 1);
             m_MaterialProperties.SetVector(m_MaskRectId, ctx.MaskRectangle.Value.ToVector4());
-            m_MaterialProperties.SetFloat(m_MaskCornerRadiusId, ctx.CornerRadius);
+            m_MaterialProperties.SetVector(m_MaskCornerRadiusId, ctx.CornerRoundRadius.ToVector4());
         }
         else m_MaterialProperties.SetInteger(m_MaskEnabledId, 0);
 
