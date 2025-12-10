@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\cGUI.Render.Abstraction\cGUI.Render.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Render.Contexts.Builder\cGUI.Render.Contexts.Builder.csproj" />
+    <ProjectReference Include="..\cGUI.Unity.Render.Abstraction\cGUI.Unity.Render.Abstraction.csproj" />
+  </ItemGroup>
+</Project>

@@ -3,9 +3,9 @@ using cGUI.Render.Abstraction;
 
 namespace cGUI.Render.Contexts.Builder;
 
-public abstract partial class QuadRenderContextBuilder<TValue>(IQuadRenderContext ctx) : IRenderContextBuilder<TValue> where TValue : IRenderContext
+public abstract partial class QuadRenderContextBuilder<TValue>(TValue ctx) : IRenderContextBuilder<TValue> where TValue : IQuadRenderContext
 {
-    protected IQuadRenderContext RenderContext = ctx;
+    protected TValue RenderContext = ctx;
 
     public IRenderContextBuilder<TValue> AddRect(in GUIRectangle rect, in GUIColor col)
         => AddRect(rect, col, col, col, col, new());
