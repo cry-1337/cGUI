@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace cGUI.Unity.Render;
 
-public class UnityRender(IRenderGraphics renderGraphics) : IRender
+public sealed class UnityRender(IRenderGraphics renderGraphics) : IRender
 {
     private readonly Queue<IRenderContext> m_RenderContexts = new(32);
     private IRenderGraphics m_RenderGraphics = renderGraphics;

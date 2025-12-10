@@ -8,12 +8,7 @@ using UnityEngine.Rendering;
 
 namespace cGUI.Unity.Render;
 
-/// <summary>
-/// Draws a Quad with Mesh help.
-/// Buffer should be executed to draw.
-/// </summary>
-/// <param name="material">Any material</param>
-public class UnityQuadRenderGraphics(Material material) : IRenderGraphics<IUnityQuadRenderContext>
+public sealed class UnityQuadRenderGraphics(Material material) : IRenderGraphics<IUnityQuadRenderContext>
 {
     private const MeshUpdateFlags MESH_UPDATE_FLAGS =
         MeshUpdateFlags.DontNotifyMeshUsers |

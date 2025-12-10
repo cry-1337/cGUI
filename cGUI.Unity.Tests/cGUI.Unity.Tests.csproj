@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\cGUI.Render.Abstraction\cGUI.Render.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Render.Contexts.Builder\cGUI.Render.Contexts.Builder.csproj" />
+    <ProjectReference Include="..\cGUI.Render.Contexts\cGUI.Render.Contexts.csproj" />
+    <ProjectReference Include="..\cGUI.Unity.Render.Abstraction\cGUI.Unity.Render.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Unity.Render.Contexts\cGUI.Unity.Render.Contexts.csproj" />
+    <ProjectReference Include="..\cGUI.Unity.Render.Extensions\cGUI.Unity.Render.Extensions.csproj" />
+    <ProjectReference Include="..\cGUI.Unity.Render\cGUI.Unity.Render.csproj" />
+  </ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<ItemGroup>
+			<ProjectReferenceAssemblies Include="%(ProjectReference.Filename).dll" />
+		</ItemGroup>
+		<Exec Command="ilrepack /out:@StandaloneBuild\$(TargetFileName) $(TargetFileName) @(ProjectReferenceAssemblies, ' ')"
+			  WorkingDirectory="$(OutputPath)" />
+	</Target>
+
+</Project>

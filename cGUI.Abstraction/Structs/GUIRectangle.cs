@@ -24,6 +24,8 @@ public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
         readonly get => m_Height; set => m_Height = value;
     }
 
+    public readonly GUIVector2 Center => new(m_X + m_Width / 2f, m_Y + m_Height / 2f);
+
     public readonly GUIPoint Position => new(m_X, m_Y);
     public readonly GUIPoint Size => new(m_Width, m_Height);
 
