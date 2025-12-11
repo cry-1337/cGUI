@@ -1,9 +1,10 @@
-﻿using cGUI.Abstraction.Structs;
+﻿using cGUI.Abstraction.Interfaces;
+using cGUI.Abstraction.Structs;
 
 namespace cGUI.Layout.Abstraction;
 
-public interface ILayout
+public interface ILayout : IResetable
 {
-    void PushStrategy(in ILayoutStrategy strategy);
+    void PushStrategy(ILayoutStrategy strategy);
     GUIRectangle PerformLayout(GUIRectangle rect, in GUIRectangle parent);
 }

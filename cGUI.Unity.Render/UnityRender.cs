@@ -9,7 +9,7 @@ public sealed class UnityRender(IRenderGraphics renderGraphics) : IRender
     private readonly Queue<IRenderContext> m_RenderContexts = new(32);
     private IRenderGraphics m_RenderGraphics = renderGraphics;
 
-    public void PushQuadContext(in IQuadRenderContext ctx) => m_RenderContexts.Enqueue(ctx);
+    public void PushQuadContext(IQuadRenderContext ctx) => m_RenderContexts.Enqueue(ctx);
     public void PushRenderGraphics(IRenderGraphics graphics) => m_RenderGraphics = graphics;
 
     public void Render()

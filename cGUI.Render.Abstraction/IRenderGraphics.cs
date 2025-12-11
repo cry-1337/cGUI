@@ -5,7 +5,7 @@ namespace cGUI.Render.Abstraction;
 
 public interface IRenderGraphics : IDisposable
 {
-    void Process(in IRenderContext ctx);
+    void Process(IRenderContext ctx);
     void SetViewProjection(in GUIRectangle rect);
     void ExecuteBuffer();
 }

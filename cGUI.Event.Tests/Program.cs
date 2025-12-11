@@ -1,7 +1,5 @@
-﻿using cGUI.Abstraction.Structs;
-using cGUI.Event.Extensions;
+﻿using cGUI.Event.Extensions;
 using cGUI.Events.Models;
-using cGUI.Render.Abstraction;
 using cGUI.Visual;
 using System;
 

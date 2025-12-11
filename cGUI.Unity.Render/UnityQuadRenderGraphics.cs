@@ -84,7 +84,7 @@ public sealed class UnityQuadRenderGraphics(Material material) : IRenderGraphics
         m_Buffer.DrawMesh(m_Mesh, Matrix4x4.identity, m_Material, 0, -1, m_MaterialProperties);
     }
 
-    public void Process(in IRenderContext ctx) => Process(ctx as IUnityQuadRenderContext);
+    public void Process(IRenderContext ctx) => Process(ctx as IUnityQuadRenderContext);
 
     public void SetViewProjection(in GUIRectangle rect)
     {
