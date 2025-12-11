@@ -1,5 +1,4 @@
-﻿using cGUI.Render.Abstraction;
-using cGUI.Render.Contexts.Builder;
+﻿using cGUI.Render.Contexts.Builder;
 using cGUI.Unity.Render.Abstraction;
 
 namespace cGUI.Unity.Render.Builder;

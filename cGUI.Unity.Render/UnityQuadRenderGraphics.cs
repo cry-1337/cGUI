@@ -2,7 +2,6 @@
 using cGUI.Render.Abstraction;
 using cGUI.Unity.Render.Abstraction;
 using cGUI.Unity.Render.Extensions;
-using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 

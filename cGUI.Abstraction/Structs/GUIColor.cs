@@ -88,7 +88,7 @@ public struct GUIColor : IEquatable<GUIColor>, IInterpolatable<GUIColor>
         return this;
     }
 
-    public readonly override string ToString() => $"R: {R}, G: {G}, B: {B}, A: {A}";
+    public readonly override string ToString() => $"(R: {R}, G: {G}, B: {B}, A: {A})";
 
     public bool Equals(GUIColor other) => R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B) && A.Equals(other.A);
 }

@@ -47,6 +47,8 @@ public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
 
     public readonly bool Contains(GUIPoint point) => point.x >= m_X && point.y >= m_Y && point.x <= m_Width && point.y <= m_Height;
 
+    public readonly override string ToString() => $"(X:{X}, Y:{Y}, W:{Width}, H:{Height})";
+
     public GUIRectangle Lerp(GUIRectangle b, float t)
     {
         m_X = GUIMath.Lerp(m_X, b.m_X, t);
