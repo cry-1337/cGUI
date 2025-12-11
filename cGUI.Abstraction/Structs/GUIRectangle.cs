@@ -39,13 +39,13 @@ public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
 
     public GUIRectangle(GUIPoint position, GUIPoint size)
     {
-        m_X = position.x;
-        m_Y = position.y;
-        m_Width = size.x;
-        m_Height = size.y;
+        m_X = position.X;
+        m_Y = position.Y;
+        m_Width = size.X;
+        m_Height = size.Y;
     }
 
-    public readonly bool Contains(GUIPoint point) => point.x >= m_X && point.y >= m_Y && point.x <= m_Width && point.y <= m_Height;
+    public readonly bool Contains(GUIPoint point) => point.X >= m_X && point.Y >= m_Y && point.X <= m_Width && point.Y <= m_Height;
 
     public readonly override string ToString() => $"(X:{X}, Y:{Y}, W:{Width}, H:{Height})";
 

@@ -7,6 +7,8 @@ public partial struct GUIVector2(float x, float y) : IInterpolatable<GUIVector2>
 {
     public float X = x, Y = y;
 
+    public readonly override string ToString() => $"(X:{X}, Y:{Y})";
+
     public GUIVector2 Lerp(GUIVector2 b, float t)
     {
         X = GUIMath.Lerp(X, b.X, t);

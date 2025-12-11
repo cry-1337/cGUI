@@ -35,6 +35,8 @@ public struct GUIVector3 : IInterpolatable<GUIVector3>
         Z = 0f;
     }
 
+    public readonly override string ToString() => $"(X:{X}, Y:{Y}, Z:{Z})";
+
     public GUIVector3 Lerp(GUIVector3 b, float t)
     {
         X = GUIMath.Lerp(X, b.X, t);
