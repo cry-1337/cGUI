@@ -7,10 +7,11 @@ using static System.Net.Mime.MediaTypeNames;
 
 public static class Program
 {
-    private static void Test(ILayout layout, ILayoutStrategy strategy, int num, GUIRectangle defaultRect, GUIRectangle parentRect)
+    private static void Test(ILayout layout, ILayoutStrategy strategy, int num, GUIRectangle defaultRect, GUIRectangle parentRect, ILayoutStrategy strategy1 = null)
     {
         layout.Reset();
         layout.PushStrategy(strategy);
+        if (strategy1 != null) layout.PushStrategy(strategy1);
 
         for (int i = 0; i < num; i++)
             Console.WriteLine(layout.PerformLayout(defaultRect, parentRect));
@@ -31,6 +32,13 @@ public static class Program
 
         Console.WriteLine("Vertical Layout Test");
         Test(layout, new VerticalLayoutStrategy(10f), 3, new(0, 0, 100, 100), new(0, 0, 600, 600));
+
+        Console.WriteLine("Alignment Layout Test");
+        layout.Reset();
+        layout.PushStrategy(new AlignmentStrategy(EAlignment.Bottom));
+        Console.WriteLine(layout.PerformLayout(new(0, 0, 100, 100), new(0, 0, 600, 600)));
+
+        //Test(layout, new AlignmentStrategy(EAlignment.Bottom), 3, new(0, 0, 100, 100), new(0, 0, 600, 600), new VerticalLayoutStrategy());
 
         Console.ReadLine();
     }

@@ -29,6 +29,8 @@ public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
     public readonly GUIPoint Position => new(m_X, m_Y);
     public readonly GUIPoint Size => new(m_Width, m_Height);
 
+    public static GUIRectangle Zero => new();
+
     public GUIRectangle(float x, float y, float width, float height)
     {
         m_X = x;
