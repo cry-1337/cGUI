@@ -3,7 +3,6 @@ using cGUI.Layout;
 using cGUI.Layout.Abstraction;
 using cGUI.Layout.Strategies;
 using System;
-using static System.Net.Mime.MediaTypeNames;
 
 public static class Program
 {
@@ -22,9 +21,9 @@ public static class Program
         var layout = new Layout();
 
         Console.WriteLine("Padding Test");
-        var paddingStrategy = new PaddingStrategy(5f);
+        var paddingStrategy = new PaddingStrategy(new(5f));
         Test(layout, paddingStrategy, 1, new(0, 0, 100, 100), new(0, 0, 600, 600));
-        paddingStrategy.Padding = 10f;
+        paddingStrategy.Padding = new(10f);
         Test(layout, paddingStrategy, 2, new(0, 0, 100, 100), new(0, 0, 600, 600));
 
         Console.WriteLine("Horizontal Layout Test");
@@ -38,7 +37,20 @@ public static class Program
         layout.PushStrategy(new AlignmentStrategy(EAlignment.Bottom));
         Console.WriteLine(layout.PerformLayout(new(0, 0, 100, 100), new(0, 0, 600, 600)));
 
-        //Test(layout, new AlignmentStrategy(EAlignment.Bottom), 3, new(0, 0, 100, 100), new(0, 0, 600, 600), new VerticalLayoutStrategy());
+        Console.WriteLine("Alignment-Padding (10, 5, 10, 5) Layout Test");
+        layout.Reset();
+        layout.PushStrategy(new AlignmentStrategy(EAlignment.Bottom));
+        layout.PushStrategy(new PaddingStrategy(new(10, 5, 10, 5)));
+        Console.WriteLine(layout.PerformLayout(new(0, 0, 100, 100), new(0, 0, 600, 600)));
+
+        Console.WriteLine("Alignment-Horizontal Layout Test");
+        layout.Reset();
+        layout.PushStrategy(new VerticalLayoutStrategy(5f));
+        layout.PushStrategy(new HorizontalLayoutStrategy(5f));
+        //layout.PushStrategy(new HorizontalLayoutStrategy(5f));
+        //layout.PushStrategy(new AlignmentStrategy(EAlignment.Bottom));
+        Console.WriteLine(layout.PerformLayout(new(0, 0, 100, 100), new(0, 0, 600, 600)));
+        Console.WriteLine(layout.PerformLayout(new(0, 0, 100, 100), new(0, 0, 600, 600)));
 
         Console.ReadLine();
     }

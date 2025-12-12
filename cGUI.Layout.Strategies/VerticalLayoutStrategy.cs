@@ -6,14 +6,12 @@ namespace cGUI.Layout.Strategies;
 
 public struct VerticalLayoutStrategy(float gap) : ILayoutStrategy, IResetable
 {
-    private float m_CurrentY = -gap;
+    private float m_CurrentY = 0f;
     private readonly float m_Gap = gap;
 
     public GUIRectangle ProcessLayout(GUIRectangle rect, in GUIRectangle parent)
     {
-        rect.X = parent.X;
-        rect.Y = parent.Y + m_CurrentY + m_Gap;
-
+        rect.Y = parent.Y + m_CurrentY;
         m_CurrentY += rect.Height + m_Gap;
 
         return rect;
