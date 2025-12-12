@@ -49,4 +49,53 @@ public partial struct GUIMath
     {
         return a + (b - a) * Clamp(t, 0, 1);
     }
+
+    public static float Min(float a, float b)
+    {
+        return (a < b) ? a : b;
+    }
+
+    public static float Min(params float[] values)
+    {
+        int num = values.Length;
+        if (num == 0)
+        {
+            return 0f;
+        }
+
+        float num2 = values[0];
+        for (int i = 1; i < num; i++)
+        {
+            if (values[i] < num2)
+            {
+                num2 = values[i];
+            }
+        }
+
+        return num2;
+    }
+    public static float Max(float a, float b)
+    {
+        return (a > b) ? a : b;
+    }
+
+    public static float Max(params float[] values)
+    {
+        int num = values.Length;
+        if (num == 0)
+        {
+            return 0f;
+        }
+
+        float num2 = values[0];
+        for (int i = 1; i < num; i++)
+        {
+            if (values[i] > num2)
+            {
+                num2 = values[i];
+            }
+        }
+
+        return num2;
+    }
 }
