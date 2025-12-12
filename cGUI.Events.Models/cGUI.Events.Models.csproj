@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <None Remove="dcgif55r.zi4~" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\cGUI.Event.Abstraction\cGUI.Event.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Layout\cGUI.Layout.csproj" />
     <ProjectReference Include="..\cGUI.Render.Abstraction\cGUI.Render.Abstraction.csproj" />
   </ItemGroup>
 </Project>
