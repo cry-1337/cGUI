@@ -18,6 +18,8 @@ public struct UnityQuadRenderContext() : IUnityQuadRenderContext
 
     public GUIRectangle CornerRoundRadius { get; set; } = new();
 
+    public Quaternion Rotation { get; set; } = Quaternion.identity;
+
     public Texture Texture { get; set; }
 
     public GUIRectangle? ClipRectangle { get; set; }

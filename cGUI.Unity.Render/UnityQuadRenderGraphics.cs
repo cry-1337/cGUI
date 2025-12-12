@@ -81,7 +81,7 @@ public sealed class UnityQuadRenderGraphics(Material material) : IRenderGraphics
         }
         else m_MaterialProperties.SetInteger(m_MaskEnabledId, 0);
 
-        m_Buffer.DrawMesh(m_Mesh, Matrix4x4.identity, m_Material, 0, -1, m_MaterialProperties);
+        m_Buffer.DrawMesh(m_Mesh, Matrix4x4.TRS(Vector3.zero, ctx.Rotation, Vector3.one), m_Material, 0, -1, m_MaterialProperties);
     }
 
     public void Process(IRenderContext ctx) => Process(ctx as IUnityQuadRenderContext);

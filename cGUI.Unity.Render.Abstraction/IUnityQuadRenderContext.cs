@@ -7,6 +7,7 @@ namespace cGUI.Unity.Render.Abstraction;
 public interface IUnityQuadRenderContext : IQuadRenderContext 
 {
     Texture Texture { get; set; }
+    Quaternion Rotation { get; set; }
     GUIRectangle? ClipRectangle { get; set; }
     GUIRectangle? MaskRectangle { get; set; }
     float ColorAlphaMultiplier { get; set; }
