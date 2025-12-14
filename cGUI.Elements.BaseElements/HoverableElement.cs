@@ -9,10 +9,9 @@ using UnityEngine;
 
 namespace cGUI.Elements.BaseElements;
 
-public class HoverableElement(string id, float width, float height, Material material) : VisualElement(id)
+public class HoverableElement(string id, float width, float height) : VisualElement(id)
 {
     private readonly GUIRectangle m_Dummy = new(0, 0, width, height);
-    private readonly UnityQuadRenderGraphics m_RenderGraphics = new(material);
     private IUnityQuadRenderContext m_Context;
 
     public override void OnLayout(LayoutEvent reason)
@@ -26,7 +25,7 @@ public class HoverableElement(string id, float width, float height, Material mat
 
     public override void OnRender(RenderEvent reason)
     {
-        reason.Render.PushRenderGraphics(m_RenderGraphics);
         reason.Render.PushQuadContext(m_Context);
+        reason.Render.Render();
     }
 }
