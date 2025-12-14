@@ -1,23 +1,32 @@
 ﻿using cGUI.Abstraction.Structs;
 using cGUI.Events.Models;
-using cGUI.Layout.Abstraction;
 using cGUI.Layout.Strategies;
+using cGUI.Unity.Render;
+using cGUI.Unity.Render.Abstraction;
+using cGUI.Unity.Render.Builder;
 using cGUI.Visual;
+using UnityEngine;
 
 namespace cGUI.Elements.BaseElements;
 
-public class HoverableElement(string id, float width, float height) : VisualElement(id)
+public class HoverableElement(string id, float width, float height, Material material) : VisualElement(id)
 {
     private readonly GUIRectangle m_Dummy = new(0, 0, width, height);
+    private readonly UnityQuadRenderGraphics m_RenderGraphics = new(material);
+    private IUnityQuadRenderContext m_Context;
 
     public override void OnLayout(LayoutEvent reason)
     {
         reason.Layout.Reset();
         reason.Layout.PushStrategy(new AlignmentStrategy());
         Bounds = reason.Layout.PerformLayout(m_Dummy, Parent.Bounds);
+
+        m_Context = new UnityQuadRenderContextBuilder(m_Context).AddRect(Bounds, GUIColor.White).Build();
     }
 
     public override void OnRender(RenderEvent reason)
     {
+        reason.Render.PushRenderGraphics(m_RenderGraphics);
+        reason.Render.PushQuadContext(m_Context);
     }
 }
