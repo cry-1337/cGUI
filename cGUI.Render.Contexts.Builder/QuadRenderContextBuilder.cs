@@ -3,7 +3,7 @@ using cGUI.Render.Abstraction;
 
 namespace cGUI.Render.Contexts.Builder;
 
-public abstract partial class QuadRenderContextBuilder<TValue>(TValue ctx) : IRenderContextBuilder<TValue> where TValue : IQuadRenderContext
+public abstract partial class QuadRenderContextBuilder<TValue>(TValue ctx) : IRenderContextBuilder<TValue> where TValue : IMeshRenderContext
 {
     protected TValue RenderContext = ctx;
 
@@ -23,7 +23,8 @@ public abstract partial class QuadRenderContextBuilder<TValue>(TValue ctx) : IRe
         in GUIColor colBotLeft, in GUIColor colBotRight,
         in GUIRectangle radiusRect)
     {
-        RenderContext.CornerRoundRadius = radiusRect;
+        // @todo: implement this
+        //RenderContext.CornerRoundRadius = radiusRect;
 
         int baseIdx = RenderContext.VerticiesCount;
 

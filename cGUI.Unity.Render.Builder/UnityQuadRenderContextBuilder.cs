@@ -3,7 +3,7 @@ using cGUI.Unity.Render.Abstraction;
 
 namespace cGUI.Unity.Render.Builder;
 
-public class UnityQuadRenderContextBuilder(IUnityQuadRenderContext ctx) : QuadRenderContextBuilder<IUnityQuadRenderContext>(ctx)
+public class UnityQuadRenderContextBuilder(IUnityMeshRenderContext ctx) : QuadRenderContextBuilder<IUnityMeshRenderContext>(ctx)
 {
-    public override IUnityQuadRenderContext Build() => RenderContext;
+    public override IUnityMeshRenderContext Build() => RenderContext;
 }

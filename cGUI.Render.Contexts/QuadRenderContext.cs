@@ -1,32 +1,25 @@
-﻿using cGUI.Abstraction.Structs;
-using cGUI.Render.Abstraction;
+﻿using cGUI.Render.Abstraction;
 using System.Collections.Generic;
 
 namespace cGUI.Render.Contexts;
 
-public struct QuadRenderContext() : IQuadRenderContext
+public struct QuadRenderContext() : IMeshRenderContext
 {
-    private readonly List<int> m_Indicies = new(16);
+    public int VerticiesCount => Vertices.Count;
 
-    public List<Vertex> Verticies = new(12);
+    public int IndiciesCount => Indicies.Count;
 
-    public readonly int VerticiesCount => Verticies.Count;
+    public List<Vertex> Vertices => new(12);
 
-    public readonly int IndiciesCount => m_Indicies.Count;
+    public List<int> Indicies => new(16);
 
-    public GUIRectangle CornerRoundRadius { get; set; } = new();
+    public void AddIndex(int index) => Indicies.Add(index);
 
-    public readonly void AddIndex(int index) => m_Indicies.Add(index);
+    public void AddVertex(Vertex vertex) => Vertices.Add(vertex);
 
-    public readonly void AddVertex(Vertex vertex) => Verticies.Add(vertex);
-
-    public readonly void Clear()
+    public void Clear()
     {
-        m_Indicies?.Clear();
-        Verticies.Clear();
+        Indicies.Clear(); 
+        Vertices.Clear();
     }
-
-    public readonly void CopyIndicies(int[] array) => m_Indicies.CopyTo(array);
-
-    public readonly void CopyVerticices(Vertex[] array) => Verticies.CopyTo(array);
 }

@@ -2,19 +2,15 @@
 using cGUI.Render.Abstraction;
 using cGUI.Unity.Render.Abstraction;
 using cGUI.Unity.Render.Extensions;
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace cGUI.Unity.Render;
 
-public sealed class UnityQuadRenderGraphics(Material material) : IRenderGraphics<IUnityQuadRenderContext>
+public sealed class UnityQuadRenderGraphics : IRenderGraphics<IUnityMeshRenderContext>
 {
-    private const MeshUpdateFlags MESH_UPDATE_FLAGS =
-        MeshUpdateFlags.DontNotifyMeshUsers |
-        MeshUpdateFlags.DontRecalculateBounds |
-        MeshUpdateFlags.DontResetBoneBounds |
-        MeshUpdateFlags.DontValidateIndices;
-
     private static readonly VertexAttributeDescriptor[] m_VertexAttributes =
     [
         new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 2),
@@ -25,66 +21,61 @@ public sealed class UnityQuadRenderGraphics(Material material) : IRenderGraphics
 
     private static readonly int m_ViewProjectionId = Shader.PropertyToID("_VP");
 
-    private static readonly int m_InvColorMul = Shader.PropertyToID("_InvColorMul");
-    private static readonly int m_MainTexId = Shader.PropertyToID("_MainTex");
-    private static readonly int m_MaskEnabledId = Shader.PropertyToID("_MaskEnable");
-    private static readonly int m_MaskRectId = Shader.PropertyToID("_MaskRect");
-    private static readonly int m_MaskCornerRadiusId = Shader.PropertyToID("_MaskCornerRadius");
+    private readonly CommandBuffer m_Buffer;
+    private readonly Mesh m_Mesh;
 
-    private readonly CommandBuffer m_Buffer = new() { name = nameof(UnityQuadRenderGraphics) };
-
-    private readonly Material m_Material = material;
-    private readonly MaterialPropertyBlock m_MaterialProperties = new();
-
-    private int[] m_Indicies;
-    private Vertex[] m_Verticies;
-
-    private Mesh m_Mesh;
-
-    public void Process(IUnityQuadRenderContext ctx)
+    public UnityQuadRenderGraphics()
     {
-        if (m_Mesh == null)
-        {
-            m_Mesh = new Mesh();
-            m_Mesh.MarkDynamic();
-        }
-
-        EnsureArrays(ctx.VerticiesCount, ctx.IndiciesCount);
-
-        ctx.CopyVerticices(m_Verticies);
-        ctx.CopyIndicies(m_Indicies);
-
-        m_Mesh.Clear();
-
-        m_Mesh.SetIndexBufferParams(ctx.IndiciesCount, IndexFormat.UInt32);
-        m_Mesh.SetVertexBufferParams(ctx.VerticiesCount, m_VertexAttributes);
-
-        m_Mesh.SetVertexBufferData(m_Verticies, 0, 0, ctx.VerticiesCount, 0, MESH_UPDATE_FLAGS);
-        m_Mesh.SetIndexBufferData(m_Indicies, 0, 0, ctx.IndiciesCount, MESH_UPDATE_FLAGS);
-
-        m_Mesh.subMeshCount = 1;
-        m_Mesh.SetSubMesh(0, new SubMeshDescriptor()
-        {
-            indexStart = 0,
-            indexCount = ctx.IndiciesCount,
-            vertexCount = ctx.VerticiesCount
-        }, MESH_UPDATE_FLAGS);
-
-        if (ctx.Texture != null) m_MaterialProperties.SetTexture(m_MainTexId, ctx.Texture);
-        m_MaterialProperties.SetFloat(m_InvColorMul, ctx.ColorAlphaMultiplier);
-
-        if (ctx.MaskRectangle != null)
-        {
-            m_MaterialProperties.SetInteger(m_MaskEnabledId, 1);
-            m_MaterialProperties.SetVector(m_MaskRectId, ctx.MaskRectangle.Value.ToVector4());
-            m_MaterialProperties.SetVector(m_MaskCornerRadiusId, ctx.CornerRoundRadius.ToVector4());
-        }
-        else m_MaterialProperties.SetInteger(m_MaskEnabledId, 0);
-
-        m_Buffer.DrawMesh(m_Mesh, Matrix4x4.TRS(Vector3.zero, ctx.Rotation, Vector3.one), m_Material, 0, -1, m_MaterialProperties);
+        (m_Mesh = new()).MarkDynamic();
+        m_Buffer = new() { name = nameof(UnityQuadRenderGraphics) };
     }
 
-    public void Process(IRenderContext ctx) => Process(ctx as IUnityQuadRenderContext);
+    public void Process(IUnityMeshRenderContext ctx)
+    {
+        const MeshUpdateFlags MESH_UPDATE_FLAGS =
+            MeshUpdateFlags.DontNotifyMeshUsers |
+            MeshUpdateFlags.DontRecalculateBounds |
+            MeshUpdateFlags.DontResetBoneBounds |
+            MeshUpdateFlags.DontValidateIndices;
+
+        var mesh = m_Mesh;
+
+        mesh.Clear();
+
+        mesh.SetIndexBufferParams(ctx.IndiciesCount, IndexFormat.UInt32);
+        mesh.SetVertexBufferParams(ctx.VerticiesCount, m_VertexAttributes);
+
+        mesh.SetVertexBufferData(ctx.Vertices, 0, 0, ctx.VerticiesCount, 0, MESH_UPDATE_FLAGS);
+        mesh.SetIndexBufferData(ctx.Indicies, 0, 0, ctx.IndiciesCount, MESH_UPDATE_FLAGS);
+
+        for (int i = 0; i < ctx.MeshCount; i++)
+        {
+            IUnityMeshData data = ctx.Meshes.ElementAt(i);
+
+            var descriptor = new SubMeshDescriptor()
+            {
+                topology = data.Topology,
+                baseVertex = 0,
+                firstVertex = data.VerticesOffset,
+                vertexCount = data.VerticiesCount,
+                indexStart = data.IndicesOffset,
+                indexCount = data.IndicesCount
+            };
+
+            mesh.SetSubMesh(i, descriptor, MESH_UPDATE_FLAGS);
+        }
+
+        var cmdBuffer = m_Buffer;
+        cmdBuffer.Clear();
+        
+        for (int i = 0; i < ctx.MeshCount; i++)
+        {
+            IUnityMeshData data = ctx.Meshes.ElementAt(i);
+            cmdBuffer.DrawMesh(mesh, Matrix4x4.TRS(Vector3.zero, data.Rotation, Vector3.one), data.Material, i, -1, data.MaterialProperties);
+        }
+    }
+
+    public void Process(IRenderContext ctx) => Process(ctx as IUnityMeshRenderContext);
 
     public void SetViewProjection(in GUIRectangle rect)
     {
@@ -107,14 +98,5 @@ public sealed class UnityQuadRenderGraphics(Material material) : IRenderGraphics
             UnityEngine.Object.Destroy(m_Mesh);
 
         m_Buffer.Release();
-    }
-
-    private void EnsureArrays(int vCount, int iCount)
-    {
-        if (m_Verticies == null || m_Verticies.Length < vCount)
-            m_Verticies = new Vertex[vCount];
-
-        if (m_Indicies == null || m_Indicies.Length < iCount)
-            m_Indicies = new int[iCount];
     }
 }

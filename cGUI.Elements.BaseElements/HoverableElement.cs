@@ -10,7 +10,7 @@ namespace cGUI.Elements.BaseElements;
 public class HoverableElement(string id, float width, float height) : VisualElement(id)
 {
     private readonly GUIRectangle m_Dummy = new(0, 0, width, height);
-    private IUnityQuadRenderContext m_Context;
+    private IUnityMeshRenderContext m_Context;
 
     public override void OnLayout(LayoutEvent reason)
     {
@@ -23,7 +23,7 @@ public class HoverableElement(string id, float width, float height) : VisualElem
 
     public override void OnRender(RenderEvent reason)
     {
-        reason.Render.PushQuadContext(m_Context);
+        reason.Render.PushMesh(m_Context);
         reason.Render.Render();
     }
 }

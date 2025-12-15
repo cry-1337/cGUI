@@ -4,7 +4,7 @@ namespace cGUI.Render.Abstraction;
 
 public interface IRender : IDisposable
 {
-    void PushQuadContext(IQuadRenderContext ctx);
+    void PushMesh(IMeshRenderContext ctx);
     void PushRenderGraphics(IRenderGraphics graphics);
     void Render();
     void ProcessBuffer();

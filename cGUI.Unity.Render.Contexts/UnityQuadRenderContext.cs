@@ -1,44 +1,31 @@
-﻿using cGUI.Abstraction.Structs;
-using cGUI.Render.Abstraction;
+﻿using cGUI.Render.Abstraction;
 using cGUI.Unity.Render.Abstraction;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace cGUI.Unity.Render.Contexts;
 
-public struct UnityQuadRenderContext() : IUnityQuadRenderContext
+public struct UnityQuadRenderContext() : IUnityMeshRenderContext
 {
-    private readonly List<int> m_Indicies = new(16);
+    public List<IUnityMeshData> Meshes => new(2);
 
-    public List<Vertex> Verticies = new(12);
+    public int MeshCount => Meshes.Count;
 
-    public readonly int VerticiesCount => Verticies.Count;
+    public int VerticiesCount => Vertices.Count;
 
-    public readonly int IndiciesCount => m_Indicies.Count;
+    public int IndiciesCount => Indicies.Count;
 
-    public GUIRectangle CornerRoundRadius { get; set; } = new();
+    public List<Vertex> Vertices => new(16);
 
-    public Quaternion Rotation { get; set; } = Quaternion.identity;
+    public List<int> Indicies => new(12);
 
-    public Texture Texture { get; set; }
+    public void AddIndex(int index) => Indicies.Add(index);
 
-    public GUIRectangle? ClipRectangle { get; set; }
+    public void AddVertex(Vertex vertex) => Vertices.Add(vertex);
 
-    public GUIRectangle? MaskRectangle { get; set; }
-
-    public float ColorAlphaMultiplier { get; set; }
-
-    public readonly void AddIndex(int index) => m_Indicies.Add(index);
-
-    public readonly void AddVertex(Vertex vertex) => Verticies.Add(vertex);
-
-    public readonly void Clear()
+    public void Clear()
     {
-        m_Indicies?.Clear();
-        Verticies.Clear();
+        Meshes.Clear();
+        Vertices.Clear();
+        Indicies.Clear();
     }
-
-    public readonly void CopyIndicies(int[] array) => m_Indicies.CopyTo(array);
-
-    public readonly void CopyVerticices(Vertex[] array) => Verticies.CopyTo(array);
 }
