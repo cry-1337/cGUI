@@ -1,11 +1,9 @@
 ﻿using cGUI.Abstraction.Structs;
 using cGUI.Events.Models;
 using cGUI.Layout.Strategies;
-using cGUI.Unity.Render;
 using cGUI.Unity.Render.Abstraction;
 using cGUI.Unity.Render.Builder;
 using cGUI.Visual;
-using UnityEngine;
 
 namespace cGUI.Elements.BaseElements;
 
