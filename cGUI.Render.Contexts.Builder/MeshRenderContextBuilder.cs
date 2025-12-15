@@ -3,7 +3,7 @@ using cGUI.Render.Abstraction;
 
 namespace cGUI.Render.Contexts.Builder;
 
-public abstract partial class QuadRenderContextBuilder<TValue>(TValue ctx) : IRenderContextBuilder<TValue> where TValue : IMeshRenderContext
+public abstract partial class MeshRenderContextBuilder<TValue>(TValue ctx) : IRenderContextBuilder<TValue> where TValue : IMeshRenderContext
 {
     protected TValue RenderContext = ctx;
 

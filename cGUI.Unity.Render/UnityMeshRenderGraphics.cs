@@ -2,14 +2,13 @@
 using cGUI.Render.Abstraction;
 using cGUI.Unity.Render.Abstraction;
 using cGUI.Unity.Render.Extensions;
-using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace cGUI.Unity.Render;
 
-public sealed class UnityQuadRenderGraphics : IRenderGraphics<IUnityMeshRenderContext>
+public sealed class UnityMeshRenderGraphics : IRenderGraphics<IUnityMeshRenderContext>
 {
     private static readonly VertexAttributeDescriptor[] m_VertexAttributes =
     [
@@ -24,10 +23,10 @@ public sealed class UnityQuadRenderGraphics : IRenderGraphics<IUnityMeshRenderCo
     private readonly CommandBuffer m_Buffer;
     private readonly Mesh m_Mesh;
 
-    public UnityQuadRenderGraphics()
+    public UnityMeshRenderGraphics()
     {
         (m_Mesh = new()).MarkDynamic();
-        m_Buffer = new() { name = nameof(UnityQuadRenderGraphics) };
+        m_Buffer = new() { name = nameof(UnityMeshRenderGraphics) };
     }
 
     public void Process(IUnityMeshRenderContext ctx)

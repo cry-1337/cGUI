@@ -18,7 +18,7 @@ public class HoverableElement(string id, float width, float height) : VisualElem
         reason.Layout.PushStrategy(new AlignmentStrategy());
         Bounds = reason.Layout.PerformLayout(m_Dummy, Parent.Bounds);
 
-        m_Context = new UnityQuadRenderContextBuilder(m_Context).AddRect(Bounds, GUIColor.White).Build();
+        m_Context = new UnityMeshRenderContextBuilder(m_Context).AddRect(Bounds, GUIColor.White).Build();
     }
 
     public override void OnRender(RenderEvent reason)
