@@ -4,28 +4,36 @@ using System.Collections.Generic;
 
 namespace cGUI.Unity.Render.Contexts;
 
-public readonly struct UnityMeshRenderContext() : IUnityMeshRenderContext
+public struct UnityMeshRenderContext() : IUnityMeshRenderContext
 {
-    public readonly List<IUnityMeshData> Meshes => new(2);
+    private List<IUnityMeshData> m_Meshes = new(2);
+    private List<Vertex> m_Vertices = new(12);
+    private List<int> m_Indices = new(16);
 
-    public readonly int MeshCount => Meshes.Count;
-
-    public readonly int VerticiesCount => Vertices.Count;
-
-    public readonly int IndiciesCount => Indicies.Count;
-
-    public readonly List<Vertex> Vertices => new(16);
-
-    public readonly List<int> Indicies => new(12);
-
-    public readonly void AddIndex(int index) => Indicies.Add(index);
-
-    public readonly void AddVertex(Vertex vertex) => Vertices.Add(vertex);
-
-    public readonly void Clear()
+    public List<IUnityMeshData> Meshes
     {
-        Meshes.Clear();
-        Vertices.Clear();
-        Indicies.Clear();
+        get => m_Meshes;
+        set => m_Meshes = value;
+    }
+
+    public readonly int MeshCount => m_Meshes.Count;
+
+    public int VerticiesCount => m_Vertices.Count;
+
+    public int IndiciesCount => m_Indices.Count;
+
+    public List<Vertex> Vertices => m_Vertices;
+
+    public List<int> Indicies => m_Indices;
+
+    public void AddIndex(int index) => m_Indices.Add(index);
+
+    public void AddVertex(Vertex vertex) => m_Vertices.Add(vertex);
+
+    public void Clear()
+    {
+        m_Meshes.Clear();
+        m_Vertices.Clear();
+        m_Indices.Clear();
     }
 }

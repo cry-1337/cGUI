@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net481</TargetFrameworks>
     <LangVersion>preview</LangVersion>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
 
 </Project>

@@ -2,10 +2,10 @@
 
 public interface IMeshData
 {
-    int IndicesOffset { get; }
-    int VerticesOffset { get; }
-    int VerticiesCount { get; }
-    int IndicesCount { get; }
-    int Order { get; }
-    float ColorAlphaMultiplier { get; }
+    int IndicesOffset { get; set; }
+    int VerticesOffset { get; set; }
+    int VerticiesCount { get; set; }
+    int IndicesCount { get; set; }
+    int Order { get; set; }
+    float ColorAlphaMultiplier { get; set; }
 }

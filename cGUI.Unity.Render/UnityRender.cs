@@ -6,7 +6,7 @@ namespace cGUI.Unity.Render;
 
 public sealed class UnityRender(IRenderGraphics renderGraphics) : IRender
 {
-    private readonly Queue<IRenderContext> m_RenderContexts = new(32);
+    private readonly Queue<IRenderContext> m_RenderContexts = new(12);
     private IRenderGraphics m_RenderGraphics = renderGraphics;
 
     public void PushMesh(IMeshRenderContext ctx) => m_RenderContexts.Enqueue(ctx);

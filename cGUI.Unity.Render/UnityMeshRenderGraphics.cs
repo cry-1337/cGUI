@@ -20,14 +20,8 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IUnityMeshRenderCo
 
     private static readonly int m_ViewProjectionId = Shader.PropertyToID("_VP");
 
-    private readonly CommandBuffer m_Buffer;
-    private readonly Mesh m_Mesh;
-
-    public UnityMeshRenderGraphics()
-    {
-        (m_Mesh = new()).MarkDynamic();
-        m_Buffer = new() { name = nameof(UnityMeshRenderGraphics) };
-    }
+    private CommandBuffer m_Buffer = new() { name = nameof(UnityMeshRenderGraphics) };
+    private Mesh? m_Mesh;
 
     public void Process(IUnityMeshRenderContext ctx)
     {
@@ -37,15 +31,21 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IUnityMeshRenderCo
             MeshUpdateFlags.DontResetBoneBounds |
             MeshUpdateFlags.DontValidateIndices;
 
-        var mesh = m_Mesh;
+        if (m_Mesh == null)
+        {
+            m_Mesh = new Mesh();
+            m_Mesh.MarkDynamic();
+        }
 
-        mesh.Clear();
+        m_Mesh.Clear(true);
 
-        mesh.SetIndexBufferParams(ctx.IndiciesCount, IndexFormat.UInt32);
-        mesh.SetVertexBufferParams(ctx.VerticiesCount, m_VertexAttributes);
+        m_Mesh.SetIndexBufferParams(ctx.IndiciesCount, IndexFormat.UInt32);
+        m_Mesh.SetVertexBufferParams(ctx.VerticiesCount, m_VertexAttributes);
 
-        mesh.SetVertexBufferData(ctx.Vertices, 0, 0, ctx.VerticiesCount, 0, MESH_UPDATE_FLAGS);
-        mesh.SetIndexBufferData(ctx.Indicies, 0, 0, ctx.IndiciesCount, MESH_UPDATE_FLAGS);
+        m_Mesh.SetVertexBufferData(ctx.Vertices, 0, 0, ctx.VerticiesCount, 0, MESH_UPDATE_FLAGS);
+        m_Mesh.SetIndexBufferData(ctx.Indicies, 0, 0, ctx.IndiciesCount, MESH_UPDATE_FLAGS);
+
+        m_Mesh.subMeshCount = ctx.MeshCount;
 
         for (int i = 0; i < ctx.MeshCount; i++)
         {
@@ -61,20 +61,20 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IUnityMeshRenderCo
                 indexCount = data.IndicesCount
             };
 
-            mesh.SetSubMesh(i, descriptor, MESH_UPDATE_FLAGS);
+            m_Mesh.SetSubMesh(i, descriptor, MESH_UPDATE_FLAGS);
         }
 
-        var cmdBuffer = m_Buffer;
-        cmdBuffer.Clear();
-        
+        m_Mesh.UploadMeshData(false);
+
+        // no rotation
         for (int i = 0; i < ctx.MeshCount; i++)
         {
             IUnityMeshData data = ctx.Meshes.ElementAt(i);
-            cmdBuffer.DrawMesh(mesh, Matrix4x4.TRS(Vector3.zero, data.Rotation, Vector3.one), data.Material, i, -1, data.MaterialProperties);
+            m_Buffer.DrawMesh(m_Mesh, Matrix4x4.identity, data.Material, i, -1, data.MaterialProperties);
         }
     }
 
-    public void Process(IRenderContext ctx) => Process(ctx as IUnityMeshRenderContext);
+    public void Process(IRenderContext ctx) => Process((IUnityMeshRenderContext) ctx);
 
     public void SetViewProjection(in GUIRectangle rect)
     {

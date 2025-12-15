@@ -5,6 +5,6 @@ namespace cGUI.Unity.Render.Abstraction;
 
 public interface IUnityMeshRenderContext : IMeshRenderContext 
 {
-    List<IUnityMeshData> Meshes { get; }
+    List<IUnityMeshData> Meshes { get; set; }
     int MeshCount { get; }
 }
