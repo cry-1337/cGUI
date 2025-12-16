@@ -23,9 +23,6 @@ public abstract partial class MeshRenderContextBuilder<TValue>(TValue ctx) : IRe
         in GUIColor colBotLeft, in GUIColor colBotRight,
         in GUIRectangle radiusRect)
     {
-        // @todo: implement this
-        //RenderContext.CornerRoundRadius = radiusRect;
-
         int baseIdx = RenderContext.VerticiesCount;
 
         RenderContext.AddVertex(new Vertex(new(rect.X, rect.Y), colTopLeft, new(0, 0)));

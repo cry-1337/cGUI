@@ -3,6 +3,7 @@ using cGUI.Events.Models;
 using cGUI.Layout.Strategies;
 using cGUI.Unity.Render.Abstraction;
 using cGUI.Unity.Render.Builder;
+using cGUI.Unity.Render.Contexts;
 using cGUI.Visual;
 
 namespace cGUI.Elements.BaseElements;
@@ -10,7 +11,7 @@ namespace cGUI.Elements.BaseElements;
 public class HoverableElement(string id, float width, float height) : VisualElement(id)
 {
     private readonly GUIRectangle m_Dummy = new(0, 0, width, height);
-    private IUnityMeshRenderContext m_Context;
+    private IUnityMeshRenderContext m_Context = new UnityMeshRenderContext();
 
     public override void OnLayout(LayoutEvent reason)
     {

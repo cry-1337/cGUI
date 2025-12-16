@@ -8,7 +8,7 @@ namespace cGUI.Event.Extensions;
 
 public static class EventDispatcherExtensions
 {
-    public static void Register<TEventOwner, TEvent>(this IEventDispatcher dispatcher, TEventOwner owner) where TEvent : IEvent
+    public static void Register<TEventOwner, TEvent>(this IEventDispatcher dispatcher, TEventOwner owner) where TEvent : IEvent where TEventOwner : notnull
     {
         if (owner is IEventHandler<TEvent> handler)
             dispatcher.Register(owner, handler);
