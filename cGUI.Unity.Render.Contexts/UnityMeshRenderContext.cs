@@ -6,21 +6,17 @@ namespace cGUI.Unity.Render.Contexts;
 
 public struct UnityMeshRenderContext() : IUnityMeshRenderContext
 {
-    private List<IUnityMeshData> m_Meshes = new(2);
-    private List<Vertex> m_Vertices = new(12);
-    private List<int> m_Indices = new(16);
+    private readonly List<IUnityMeshData> m_Meshes = new(2);
+    private readonly List<Vertex> m_Vertices = new(12);
+    private readonly List<int> m_Indices = new(16);
 
-    public List<IUnityMeshData> Meshes
-    {
-        get => m_Meshes;
-        set => m_Meshes = value;
-    }
+    public List<IUnityMeshData> Meshes => m_Meshes;
 
     public readonly int MeshCount => m_Meshes.Count;
 
-    public int VerticiesCount => m_Vertices.Count;
+    public readonly int VerticiesCount => m_Vertices.Count;
 
-    public int IndiciesCount => m_Indices.Count;
+    public readonly int IndiciesCount => m_Indices.Count;
 
     public List<Vertex> Vertices => m_Vertices;
 
