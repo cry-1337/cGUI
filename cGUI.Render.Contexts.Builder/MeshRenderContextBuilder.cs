@@ -1,48 +1,68 @@
 ﻿using cGUI.Abstraction.Structs;
 using cGUI.Render.Abstraction;
+using System;
 
 namespace cGUI.Render.Contexts.Builder;
 
-public abstract partial class MeshRenderContextBuilder<TValue>(TValue ctx) : IRenderContextBuilder<TValue> where TValue : IMeshRenderContext
+/// <param name="meshValue">Will be used in methods without MeshValue (example: AddRect(rect, color)) instead of creating new instances of MeshData</param>
+public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue>(TContextValue ctx, TMeshValue? meshValue) : IRenderContextBuilder<TContextValue, TMeshValue>
+    where TContextValue : IMeshRenderContext<TMeshValue>
+    where TMeshValue : IMeshData
 {
-    protected TValue RenderContext = ctx;
+    protected TContextValue m_RenderContext = ctx;
+    protected TMeshValue? m_MeshValue = meshValue;
 
-    public IRenderContextBuilder<TValue> AddRect(in GUIRectangle rect, in GUIColor col)
-        => AddRect(rect, col, col, col, col, new());
+    public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect, in GUIColor color)
+    {
+        if (m_MeshValue == null) throw new InvalidOperationException($"Rect in \"{nameof(MeshRenderContextBuilder<,>)}\" can't create MeshData. (MeshData is null)");
+        return AddRect(rect, color, m_MeshValue);
+    }
 
-    public IRenderContextBuilder<TValue> AddRect(in GUIRectangle rect, in GUIColor col, in GUIRectangle radiusRect)
-        => AddRect(rect, col, col, col, col, radiusRect);
-
-    public IRenderContextBuilder<TValue> AddRect(in GUIRectangle rect,
+    public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect,
         in GUIColor colTopLeft, in GUIColor colTopRight,
         in GUIColor colBotLeft, in GUIColor colBotRight)
-        => AddRect(rect, colTopLeft, colTopRight, colBotLeft, colBotRight, new());
-
-    public IRenderContextBuilder<TValue> AddRect(in GUIRectangle rect,
-        in GUIColor colTopLeft, in GUIColor colTopRight,
-        in GUIColor colBotLeft, in GUIColor colBotRight,
-        in GUIRectangle radiusRect)
     {
-        int baseIdx = RenderContext.VerticiesCount;
+        if (m_MeshValue == null) throw new InvalidOperationException($"Rect in \"{nameof(MeshRenderContextBuilder<,>)}\" can't create MeshData. (MeshData is null)");
+        return AddRect(rect, colTopLeft, colTopRight, colBotLeft, colBotRight, m_MeshValue);
+    }
 
-        RenderContext.AddVertex(new Vertex(new(rect.X, rect.Y), colTopLeft, new(0, 0)));
-        RenderContext.AddVertex(new Vertex(new(rect.Width + rect.X, rect.Y), colTopRight, new(1, 0)));
-        RenderContext.AddVertex(new Vertex(new(rect.Width + rect.X, rect.Height + rect.Y), colBotRight, new(1, 1)));
-        RenderContext.AddVertex(new Vertex(new(rect.X, rect.Height + rect.Y), colBotLeft, new(0, 1)));
+    public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect, in GUIColor col, TMeshValue meshData)
+        => AddRect(rect, col, col, col, col, meshData);
 
-        RenderContext.AddIndex(baseIdx + 0);
-        RenderContext.AddIndex(baseIdx + 1);
-        RenderContext.AddIndex(baseIdx + 2);
+    public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect,
+        in GUIColor colTopLeft, in GUIColor colTopRight,
+        in GUIColor colBotLeft, in GUIColor colBotRight, TMeshValue meshData)
+    {
+        int baseIdx = m_RenderContext.IndiciesCount;
+        int baseVtx = m_RenderContext.VerticiesCount;
 
-        RenderContext.AddIndex(baseIdx + 2);
-        RenderContext.AddIndex(baseIdx + 3);
-        RenderContext.AddIndex(baseIdx + 0);
+        m_RenderContext.AddVertex(new Vertex(new(rect.X, rect.Y), colTopLeft, new(0, 0)));
+        m_RenderContext.AddVertex(new Vertex(new(rect.Width + rect.X, rect.Y), colTopRight, new(1, 0)));
+        m_RenderContext.AddVertex(new Vertex(new(rect.Width + rect.X, rect.Height + rect.Y), colBotRight, new(1, 1)));
+        m_RenderContext.AddVertex(new Vertex(new(rect.X, rect.Height + rect.Y), colBotLeft, new(0, 1)));
+
+        m_RenderContext.AddIndex(baseIdx + 0);
+        m_RenderContext.AddIndex(baseIdx + 1);
+        m_RenderContext.AddIndex(baseIdx + 2);
+
+        m_RenderContext.AddIndex(baseIdx + 2);
+        m_RenderContext.AddIndex(baseIdx + 3);
+        m_RenderContext.AddIndex(baseIdx + 0);
+
+        meshData.IndiciesOffset = baseIdx;
+        meshData.VerticesOffset = baseVtx;
+
+        meshData.IndicesCount = m_RenderContext.IndiciesCount - baseIdx;
+        meshData.VerticiesCount = m_RenderContext.VerticiesCount - baseVtx;
+
+        m_RenderContext.Meshes.Add(meshData);
 
         return this;
     }
 
-    public IRenderContextBuilder<TValue> AddLine(GUIVector2 a, GUIVector2 b,
+    public IRenderContextBuilder<TContextValue, TMeshValue> AddLine(GUIVector2 a, GUIVector2 b,
         GUIColor color,
+        TMeshValue meshData,
         float thickness = 1f,
         float aaSize = 1f)
     {
@@ -75,7 +95,8 @@ public abstract partial class MeshRenderContextBuilder<TValue>(TValue ctx) : IRe
             
             GUIRectangle rect = new(minX, minY, maxX - minX, maxY - minY);
 
-            AddRect(rect, c0, c0, c1, c1, default);
+            // @todo: implement meshdata creation
+            AddRect(rect, c0, c0, c1, c1, meshData);
         }
 
         AddStrip(-half, +half, color, color);
@@ -91,5 +112,5 @@ public abstract partial class MeshRenderContextBuilder<TValue>(TValue ctx) : IRe
         return this;
     }
 
-    public abstract TValue Build();
+    public abstract TContextValue Build();
 }

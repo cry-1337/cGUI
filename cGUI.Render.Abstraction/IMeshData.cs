@@ -2,7 +2,7 @@
 
 public interface IMeshData
 {
-    int IndicesOffset { get; set; }
+    int IndiciesOffset { get; set; }
     int VerticesOffset { get; set; }
     int VerticiesCount { get; set; }
     int IndicesCount { get; set; }

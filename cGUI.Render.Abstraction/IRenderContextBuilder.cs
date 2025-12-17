@@ -2,22 +2,25 @@
 
 namespace cGUI.Render.Abstraction;
 
-public interface IRenderContextBuilder<TValue> where TValue : IRenderContext
+public interface IRenderContextBuilder<TContextValue, TMeshValue>
+    where TContextValue : IRenderContext
+    where TMeshValue : IMeshData
 {
-    IRenderContextBuilder<TValue> AddRect(in GUIRectangle rect, in GUIColor color);
-    IRenderContextBuilder<TValue> AddRect(in GUIRectangle rect, in GUIColor color, in GUIRectangle radiusRect);
-    IRenderContextBuilder<TValue> AddRect(in GUIRectangle rect,
+    IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect, in GUIColor color);
+    IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect,
         in GUIColor colTopLeft, in GUIColor colTopRight,
         in GUIColor colBotLeft, in GUIColor colBotRight);
-    IRenderContextBuilder<TValue> AddRect(in GUIRectangle rect,
+    IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect, in GUIColor color, TMeshValue meshData);
+    IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect,
         in GUIColor colTopLeft, in GUIColor colTopRight,
         in GUIColor colBotLeft, in GUIColor colBotRight,
-        in GUIRectangle radiusRect);
+        TMeshValue meshData);
 
-    IRenderContextBuilder<TValue> AddLine(GUIVector2 a, GUIVector2 b,
+    IRenderContextBuilder<TContextValue, TMeshValue> AddLine(GUIVector2 a, GUIVector2 b,
         GUIColor color,
+        TMeshValue meshData,
         float thickness,
         float aaSize);
 
-    TValue Build();
+    TContextValue Build();
 }

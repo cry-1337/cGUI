@@ -12,3 +12,9 @@ public interface IMeshRenderContext : IRenderContext
     void AddIndex(int index);
     void Clear();
 }
+
+public interface IMeshRenderContext<TValue> : IMeshRenderContext where TValue : IMeshData
+{
+    List<TValue> Meshes { get; }
+    int MeshCount { get; }
+}

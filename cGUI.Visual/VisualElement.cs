@@ -18,7 +18,7 @@ public abstract class VisualElement(string id) : IVisualElement
 
     public GUIRectangle Bounds { get; set; }
 
-    public IContainer Parent { get; private set; }
+    public IContainer? Parent { get; private set; }
 
     public virtual bool HitTest(GUIPoint point, out HitTestResult result)
     {
@@ -44,5 +44,5 @@ public abstract class VisualElement(string id) : IVisualElement
 
     bool IEventHandler<RenderEvent>.Handle(RenderEvent reason) { OnRender(reason); return true; }
 
-    internal protected virtual void OnParentChanged(IContainer container) => Parent = container;
+    internal protected virtual void OnParentChanged(IContainer? container) => Parent = container;
 }

@@ -20,7 +20,7 @@ public struct UnityMeshData(Material material) : IUnityMeshData
 
     public GUIRectangle? CornerRoundRadius { get; set; } = null;
 
-    public int IndicesOffset { get; set; } = 0;
+    public int IndiciesOffset { get; set; } = 0;
 
     public int VerticesOffset { get; set; } = 0;
 

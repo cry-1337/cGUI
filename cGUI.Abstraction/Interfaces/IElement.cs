@@ -12,7 +12,7 @@ public interface IElement
 
     GUIRectangle Bounds { get; }
 
-    IContainer Parent { get; }
+    IContainer? Parent { get; }
 
     bool HitTest(GUIPoint point, out HitTestResult result);
 }

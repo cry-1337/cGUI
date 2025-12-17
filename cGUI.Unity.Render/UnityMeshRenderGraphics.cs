@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 
 namespace cGUI.Unity.Render;
 
-public sealed class UnityMeshRenderGraphics : IRenderGraphics<IUnityMeshRenderContext>
+public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext<IUnityMeshData>>
 {
     private static readonly VertexAttributeDescriptor[] m_VertexAttributes =
     [
@@ -23,7 +23,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IUnityMeshRenderCo
     private CommandBuffer m_Buffer = new() { name = nameof(UnityMeshRenderGraphics) };
     private Mesh? m_Mesh;
 
-    public void Process(IUnityMeshRenderContext ctx)
+    public void Process(IMeshRenderContext<IUnityMeshData> ctx)
     {
         const MeshUpdateFlags MESH_UPDATE_FLAGS =
             MeshUpdateFlags.DontNotifyMeshUsers |
@@ -57,7 +57,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IUnityMeshRenderCo
                 baseVertex = 0,
                 firstVertex = data.VerticesOffset,
                 vertexCount = data.VerticiesCount,
-                indexStart = data.IndicesOffset,
+                indexStart = data.IndiciesOffset,
                 indexCount = data.IndicesCount
             };
 
@@ -74,7 +74,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IUnityMeshRenderCo
         }
     }
 
-    public void Process(IRenderContext ctx) => Process((IUnityMeshRenderContext) ctx);
+    public void Process(IRenderContext ctx) => Process((IMeshRenderContext<IUnityMeshData>) ctx);
 
     public void SetViewProjection(in GUIRectangle rect)
     {

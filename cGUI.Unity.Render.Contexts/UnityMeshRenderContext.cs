@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace cGUI.Unity.Render.Contexts;
 
-public struct UnityMeshRenderContext() : IUnityMeshRenderContext
+public struct UnityMeshRenderContext() : IMeshRenderContext<IUnityMeshData>
 {
     private readonly List<IUnityMeshData> m_Meshes = new(2);
     private readonly List<Vertex> m_Vertices = new(12);
