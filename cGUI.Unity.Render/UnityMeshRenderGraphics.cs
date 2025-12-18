@@ -66,11 +66,10 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
 
         m_Mesh.UploadMeshData(false);
 
-        // no rotation
         for (int i = 0; i < ctx.MeshCount; i++)
         {
             IUnityMeshData data = ctx.Meshes.ElementAt(i);
-            m_Buffer.DrawMesh(m_Mesh, Matrix4x4.identity, data.Material, i, -1, data.MaterialProperties);
+            m_Buffer.DrawMesh(m_Mesh, Matrix4x4.TRS(Vector3.zero, data.Rotation, Vector3.one), data.Material, i, -1, data.MaterialProperties);
         }
     }
 

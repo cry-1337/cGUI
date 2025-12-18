@@ -2,6 +2,7 @@
 using cGUI.Events.Models;
 using cGUI.Layout.Strategies;
 using cGUI.Render.Abstraction;
+using cGUI.Unity.Render;
 using cGUI.Unity.Render.Abstraction;
 using cGUI.Unity.Render.Builder;
 using cGUI.Unity.Render.Contexts;
@@ -21,7 +22,7 @@ public class HoverableElement(string id, float width, float height) : VisualElem
         reason.Layout.PushStrategy(new AlignmentStrategy());
         Bounds = reason.Layout.PerformLayout(m_Dummy, Parent != null ? Parent.Bounds : new GUIRectangle(0, 0, Screen.width, Screen.height));
 
-        m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, GUIColor.White).Build();
+        m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, GUIColor.White, new UnityMeshData()).Build();
     }
 
     public override void OnRender(RenderEvent reason)
