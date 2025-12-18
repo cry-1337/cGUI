@@ -30,7 +30,7 @@ public class Program
         container.Add(new TestElement("123"));
         container.Add(new TestElement("53"));
 
-        disp.Spread<RenderEvent>(container, new());
+        //disp.Spread<RenderEvent>(container, new());
         disp.Spread<LayoutEvent>(container, new());
 
         Console.ReadLine();

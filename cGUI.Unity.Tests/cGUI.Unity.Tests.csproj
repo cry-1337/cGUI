@@ -1,6 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\cGUI.Abstraction\cGUI.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Event.Abstraction\cGUI.Event.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Event.Extensions\cGUI.Event.Extensions.csproj" />
+    <ProjectReference Include="..\cGUI.Events.Models\cGUI.Events.Models.csproj" />
+    <ProjectReference Include="..\cGUI.Event\cGUI.Event.csproj" />
+    <ProjectReference Include="..\cGUI.Layout.Abstraction\cGUI.Layout.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Layout.Strategies\cGUI.Layout.Strategies.csproj" />
+    <ProjectReference Include="..\cGUI.Layout\cGUI.Layout.csproj" />
+    <ProjectReference Include="..\cGUI.Math\cGUI.Math.csproj" />
     <ProjectReference Include="..\cGUI.Render.Abstraction\cGUI.Render.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Render.Contexts.Builder\cGUI.Render.Contexts.Builder.csproj" />
     <ProjectReference Include="..\cGUI.Render.Contexts\cGUI.Render.Contexts.csproj" />
@@ -9,6 +18,8 @@
     <ProjectReference Include="..\cGUI.Unity.Render.Contexts\cGUI.Unity.Render.Contexts.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render.Extensions\cGUI.Unity.Render.Extensions.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render\cGUI.Unity.Render.csproj" />
+    <ProjectReference Include="..\cGUI.Visual.Abstraction\cGUI.Visual.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Visual\cGUI.Visual.csproj" />
   </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

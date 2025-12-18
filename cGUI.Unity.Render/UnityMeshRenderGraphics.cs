@@ -3,6 +3,7 @@ using cGUI.Render.Abstraction;
 using cGUI.Unity.Render.Abstraction;
 using cGUI.Unity.Render.Extensions;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -45,13 +46,12 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
         m_Mesh.SetVertexBufferData(ctx.Vertices, 0, 0, ctx.VerticiesCount, 0, MESH_UPDATE_FLAGS);
         m_Mesh.SetIndexBufferData(ctx.Indicies, 0, 0, ctx.IndiciesCount, MESH_UPDATE_FLAGS);
 
-        m_Mesh.subMeshCount = ctx.MeshCount;
-
+        var descriptors = new NativeArray<SubMeshDescriptor>(ctx.MeshCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
         for (int i = 0; i < ctx.MeshCount; i++)
         {
             IUnityMeshData data = ctx.Meshes.ElementAt(i);
 
-            var descriptor = new SubMeshDescriptor()
+            descriptors[i] = new SubMeshDescriptor()
             {
                 topology = data.Topology,
                 baseVertex = 0,
@@ -60,9 +60,8 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
                 indexStart = data.IndiciesOffset,
                 indexCount = data.IndicesCount
             };
-
-            m_Mesh.SetSubMesh(i, descriptor, MESH_UPDATE_FLAGS);
         }
+        m_Mesh.SetSubMeshes(descriptors, MESH_UPDATE_FLAGS);
 
         m_Mesh.UploadMeshData(false);
 
@@ -76,13 +75,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
     public void Process(IRenderContext ctx) => Process((IMeshRenderContext<IUnityMeshData>) ctx);
 
     public void SetViewProjection(in GUIRectangle rect)
-    {
-        var view = Matrix4x4.identity;
-        var proj = Matrix4x4.Ortho(rect.X, rect.Width, rect.Y, rect.Height, short.MinValue, short.MaxValue);
-        var gpuProj = GL.GetGPUProjectionMatrix(proj, true);
-
-        m_Buffer.SetGlobalMatrix(m_ViewProjectionId, view * gpuProj);
-    }
+        => m_Buffer.SetViewProjectionMatrices(Matrix4x4.identity, GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(rect.X, rect.Width, rect.Y, rect.Height, short.MinValue, short.MaxValue), false));
 
     public void ExecuteBuffer()
     {

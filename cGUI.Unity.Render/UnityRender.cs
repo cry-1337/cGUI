@@ -20,6 +20,7 @@ public sealed class UnityRender(IRenderGraphics renderGraphics) : IRender
         {
             var ctx = m_RenderContexts.Dequeue();
             m_RenderGraphics.Process(ctx);
+            ctx.Clear();
         }
         ProcessBuffer();
     }

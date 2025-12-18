@@ -22,10 +22,6 @@ public struct UnityMeshRenderContext() : IMeshRenderContext<IUnityMeshData>
 
     public List<int> Indicies => m_Indices;
 
-    public void AddIndex(int index) => m_Indices.Add(index);
-
-    public void AddVertex(Vertex vertex) => m_Vertices.Add(vertex);
-
     public void Clear()
     {
         m_Meshes.Clear();

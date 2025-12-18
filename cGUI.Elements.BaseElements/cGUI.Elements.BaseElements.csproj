@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\cGUI.Event.Abstraction\cGUI.Event.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Layout.Strategies\cGUI.Layout.Strategies.csproj" />
@@ -10,4 +10,11 @@
     <ProjectReference Include="..\cGUI.Visual.Abstraction\cGUI.Visual.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Visual\cGUI.Visual.csproj" />
   </ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<ItemGroup>
+			<ProjectReferenceAssemblies Include="%(ProjectReference.Filename).dll" />
+		</ItemGroup>
+		<Exec Command="ilrepack /out:@StandaloneBuild\$(TargetFileName) $(TargetFileName) @(ProjectReferenceAssemblies, ' ')" WorkingDirectory="$(OutputPath)" />
+	</Target>
 </Project>

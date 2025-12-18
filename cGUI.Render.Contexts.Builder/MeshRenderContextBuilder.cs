@@ -29,31 +29,39 @@ public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue
     public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect, in GUIColor col, TMeshValue meshData)
         => AddRect(rect, col, col, col, col, meshData);
 
-    public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect,
+    public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(
+        in GUIRectangle rect,
         in GUIColor colTopLeft, in GUIColor colTopRight,
-        in GUIColor colBotLeft, in GUIColor colBotRight, TMeshValue meshData)
+        in GUIColor colBotLeft, in GUIColor colBotRight,
+        TMeshValue meshData)
     {
-        int baseIdx = m_RenderContext.IndiciesCount;
-        int baseVtx = m_RenderContext.VerticiesCount;
+        var vertices = m_RenderContext.Vertices;
+        var indices = m_RenderContext.Indicies;
 
-        m_RenderContext.AddVertex(new Vertex(new(rect.X, rect.Y), colTopLeft, new(0, 0)));
-        m_RenderContext.AddVertex(new Vertex(new(rect.Width + rect.X, rect.Y), colTopRight, new(1, 0)));
-        m_RenderContext.AddVertex(new Vertex(new(rect.Width + rect.X, rect.Height + rect.Y), colBotRight, new(1, 1)));
-        m_RenderContext.AddVertex(new Vertex(new(rect.X, rect.Height + rect.Y), colBotLeft, new(0, 1)));
+        int baseVtx = vertices.Count;
+        int baseIdx = indices.Count;
 
-        m_RenderContext.AddIndex(baseIdx + 0);
-        m_RenderContext.AddIndex(baseIdx + 1);
-        m_RenderContext.AddIndex(baseIdx + 2);
+        float rX = rect.X;
+        float rY = rect.Y;
+        float rRight = rX + rect.Width;
+        float rBottom = rY + rect.Height;
 
-        m_RenderContext.AddIndex(baseIdx + 2);
-        m_RenderContext.AddIndex(baseIdx + 3);
-        m_RenderContext.AddIndex(baseIdx + 0);
+        vertices.Add(new Vertex(new(rX, rY), colTopLeft, new(0, 0)));
+        vertices.Add(new Vertex(new(rRight, rY), colTopRight, new(1, 0)));
+        vertices.Add(new Vertex(new(rRight, rBottom), colBotRight, new(1, 1)));
+        vertices.Add(new Vertex(new(rX, rBottom), colBotLeft, new(0, 1)));
 
-        meshData.IndiciesOffset = baseIdx;
+        indices.Add(baseVtx + 0);
+        indices.Add(baseVtx + 1);
+        indices.Add(baseVtx + 2);
+        indices.Add(baseVtx + 2);
+        indices.Add(baseVtx + 3);
+        indices.Add(baseVtx + 0);
+
         meshData.VerticesOffset = baseVtx;
-
-        meshData.IndicesCount = m_RenderContext.IndiciesCount - baseIdx;
-        meshData.VerticiesCount = m_RenderContext.VerticiesCount - baseVtx;
+        meshData.IndiciesOffset = baseIdx;
+        meshData.VerticiesCount = 4;
+        meshData.IndicesCount = 6;
 
         m_RenderContext.Meshes.Add(meshData);
 
