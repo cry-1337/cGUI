@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\cGUI.Event.Abstraction\cGUI.Event.Abstraction.csproj" />
-    <ProjectReference Include="..\cGUI.Layout.Strategies\cGUI.Layout.Strategies.csproj" />
     <ProjectReference Include="..\cGUI.Render.Contexts.Builder\cGUI.Render.Contexts.Builder.csproj" />
     <ProjectReference Include="..\cGUI.Render.Contexts\cGUI.Render.Contexts.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render.Builder\cGUI.Unity.Render.Builder.csproj" />

@@ -1,6 +1,7 @@
 ﻿using cGUI.Abstraction.Structs;
+using cGUI.Event.Abstraction;
 using cGUI.Events.Models;
-using cGUI.Layout.Strategies;
+using cGUI.Layout.Abstraction;
 using cGUI.Render.Abstraction;
 using cGUI.Unity.Render;
 using cGUI.Unity.Render.Abstraction;
@@ -11,22 +12,38 @@ using UnityEngine;
 
 namespace cGUI.Elements.BaseElements;
 
-public class HoverableElement(string id, float width, float height) : VisualElement(id)
+public class HoverableElement(string id, GUIRectangle dummy, Material material) : VisualElement(id)
 {
-    private readonly GUIRectangle m_Dummy = new(0, 0, width, height);
+    private class SimpleStrategy : ILayoutStrategy
+    {
+        public GUIRectangle ProcessLayout(GUIRectangle desiredRect, LayoutState state, out LayoutState newState)
+        {
+            desiredRect.X = state.RemainingBounds.X;
+
+            newState = state;
+            newState.RemainingBounds.X += desiredRect.Width;
+
+            return desiredRect;
+        }
+    }
+
+    private readonly GUIRectangle m_Dummy = dummy;
+    private readonly Material m_Material = material;
     private IMeshRenderContext<IUnityMeshData> m_Context = new UnityMeshRenderContext();
 
     public override void OnLayout(LayoutEvent reason)
     {
-        reason.Layout.Reset();
-        reason.Layout.PushStrategy(new AlignmentStrategy());
-        Bounds = reason.Layout.PerformLayout(m_Dummy, Parent != null ? Parent.Bounds : new GUIRectangle(0, 0, Screen.width, Screen.height));
+        var layout = reason.Layout;
 
-        m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, GUIColor.White, new UnityMeshData()).Build();
+        layout.PushNode(new LayoutNode(this, m_Dummy, [new SimpleStrategy()]));
+        layout.PerformLayout(Parent != null ? Parent.Bounds : new GUIRectangle(0, 0, Screen.width, Screen.height));
+
+        m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, GUIColor.White, new UnityMeshData(m_Material)).Build();
     }
 
     public override void OnRender(RenderEvent reason)
     {
         reason.Render.PushMesh(m_Context);
+        reason.Render.Render();
     }
 }

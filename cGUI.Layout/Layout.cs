@@ -6,14 +6,18 @@ namespace cGUI.Layout;
 
 public class Layout : ILayout
 {
-    private readonly List<ILayoutStrategy> m_LayoutStrategies = new(16);
-    public void PushStrategy(ILayoutStrategy strategy) => m_LayoutStrategies.Add(strategy);
-    public GUIRectangle PerformLayout(GUIRectangle rect, in GUIRectangle parent)
-    {
-        foreach (var strategy in m_LayoutStrategies)
-            rect = strategy.ProcessLayout(rect, parent);
+    private List<LayoutNode> m_Nodes = new(32);
 
-        return rect;
+    public void PushNode(LayoutNode node) => m_Nodes.Add(node);
+
+    public void PerformLayout(in GUIRectangle screenBounds)
+    {
+        var layoutState = new LayoutState(screenBounds);
+
+        foreach (var node in m_Nodes)
+            foreach (var strategy in node.Strategies)
+                node.Element.Bounds = strategy.ProcessLayout(node.DesiredRect, layoutState, out layoutState);
     }
-    public void Reset() => m_LayoutStrategies.Clear();
+
+    public void Reset() => m_Nodes.Clear();
 }

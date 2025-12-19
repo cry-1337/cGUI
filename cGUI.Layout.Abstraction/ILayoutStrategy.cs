@@ -4,5 +4,5 @@ namespace cGUI.Layout.Abstraction;
 
 public interface ILayoutStrategy
 {
-    GUIRectangle ProcessLayout(GUIRectangle rect, in GUIRectangle parent);
+    GUIRectangle ProcessLayout(GUIRectangle desiredRect, LayoutState state, out LayoutState newState);
 }
