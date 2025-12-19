@@ -41,10 +41,10 @@ public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue
         int baseVtx = vertices.Count;
         int baseIdx = indices.Count;
 
-        vertices.Add(new Vertex(new(rect.X, rect.Y), colTopLeft, new(0, 0)));
-        vertices.Add(new Vertex(new(rect.X + rect.Width, rect.Y), colTopRight, new(1, 0)));
-        vertices.Add(new Vertex(new(rect.X + rect.Width, rect.Y + rect.Height), colBotRight, new(1, 1)));
-        vertices.Add(new Vertex(new(rect.X, rect.Y + rect.Height), colBotLeft, new(0, 1)));
+        vertices.Add(new Vertex(new(rect.X, rect.Y), colBotLeft, new(0, 0)));
+        vertices.Add(new Vertex(new(rect.X + rect.Width, rect.Y), colBotRight, new(1, 0)));
+        vertices.Add(new Vertex(new(rect.X + rect.Width, rect.Y + rect.Height), colTopRight, new(1, 1)));
+        vertices.Add(new Vertex(new(rect.X, rect.Y + rect.Height), colTopLeft, new(0, 1)));
 
         indices.Add(baseVtx + 0);
         indices.Add(baseVtx + 1);
