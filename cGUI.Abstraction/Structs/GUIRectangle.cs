@@ -59,6 +59,11 @@ public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
 
     public readonly override string ToString() => $"(X:{X}, Y:{Y}, W:{Width}, H:{Height})";
 
+    public GUIVector2 GetLocalPosition(float x, float y) => new(GUIMath.LerpUnclamped(X, X + Width, x), GUIMath.LerpUnclamped(Y, Y + Height, y));
+    public GUIVector2 GetLocalPosition(GUIVector2 point) => new(GUIMath.LerpUnclamped(X, X + Width, point.X), GUIMath.LerpUnclamped(Y, Y + Height, point.Y));
+    public GUIVector2 GetNormalPosition(float x, float y) => new(GUIMath.InverseLerp(X, X + Width, x), GUIMath.InverseLerp(Y, Y + Height, y));
+    public GUIVector2 GetNormalPosition(GUIVector2 point) => new(GUIMath.InverseLerp(X, X + Width, point.X), GUIMath.InverseLerp(Y, Y + Height, point.Y));
+
     public GUIRectangle Lerp(GUIRectangle b, float t)
     {
         m_X = GUIMath.Lerp(m_X, b.m_X, t);

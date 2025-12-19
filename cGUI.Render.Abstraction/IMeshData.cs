@@ -7,5 +7,4 @@ public interface IMeshData
     int VerticiesCount { get; set; }
     int IndicesCount { get; set; }
     int Order { get; set; }
-    float ColorAlphaMultiplier { get; set; }
 }

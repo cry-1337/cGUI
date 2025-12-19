@@ -6,5 +6,7 @@
     <ProjectReference Include="..\cGUI.Abstraction\cGUI.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Math\cGUI.Math.csproj" />
     <ProjectReference Include="..\cGUI.Render.Abstraction\cGUI.Render.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Unity.Render.Abstraction\cGUI.Unity.Render.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Unity.Render.Contexts\cGUI.Unity.Render.Contexts.csproj" />
   </ItemGroup>
 </Project>

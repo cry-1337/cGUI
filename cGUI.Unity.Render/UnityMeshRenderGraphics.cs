@@ -19,7 +19,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
         new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 1)
     ];
 
-    private readonly CommandBuffer m_Buffer = new() { name = nameof(UnityMeshRenderGraphics) };
+    private CommandBuffer m_Buffer = new() { name = nameof(UnityMeshRenderGraphics) };
     private Mesh? m_Mesh;
 
     public void Process(IMeshRenderContext<IUnityMeshData> ctx)

@@ -41,15 +41,10 @@ public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue
         int baseVtx = vertices.Count;
         int baseIdx = indices.Count;
 
-        float rX = rect.X;
-        float rY = rect.Y;
-        float rRight = rX + rect.Width;
-        float rBottom = rY + rect.Height;
-
-        vertices.Add(new Vertex(new(rX, rY), colTopLeft, new(0, 0)));
-        vertices.Add(new Vertex(new(rRight, rY), colTopRight, new(1, 0)));
-        vertices.Add(new Vertex(new(rRight, rBottom), colBotRight, new(1, 1)));
-        vertices.Add(new Vertex(new(rX, rBottom), colBotLeft, new(0, 1)));
+        vertices.Add(new Vertex(new(rect.X, rect.Y), colTopLeft, new(0, 0)));
+        vertices.Add(new Vertex(new(rect.X + rect.Width, rect.Y), colTopRight, new(1, 0)));
+        vertices.Add(new Vertex(new(rect.X + rect.Width, rect.Y + rect.Height), colBotRight, new(1, 1)));
+        vertices.Add(new Vertex(new(rect.X, rect.Y + rect.Height), colBotLeft, new(0, 1)));
 
         indices.Add(baseVtx + 0);
         indices.Add(baseVtx + 1);
@@ -103,7 +98,7 @@ public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue
             
             GUIRectangle rect = new(minX, minY, maxX - minX, maxY - minY);
 
-            // @todo: implement meshdata creation
+            if (m_MeshValue == null) throw new InvalidOperationException($"Line in \"{nameof(MeshRenderContextBuilder<,>)}\" can't create MeshData. (MeshData is null)");
             AddRect(rect, c0, c0, c1, c1, meshData);
         }
 

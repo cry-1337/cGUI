@@ -50,6 +50,21 @@ public partial struct GUIMath
         return a + (b - a) * Clamp(t, 0, 1);
     }
 
+    public static float LerpUnclamped(float a, float b, float t)
+    {
+        return a + (b - a) * t;
+    }
+
+    public static float InverseLerp(float a, float b, float value)
+    {
+        if (a != b)
+        {
+            return Clamp((value - a) / (b - a), 0, 1);
+        }
+
+        return 0f;
+    }
+
     public static float Min(float a, float b)
     {
         return (a < b) ? a : b;

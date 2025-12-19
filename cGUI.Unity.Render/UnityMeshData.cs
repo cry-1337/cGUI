@@ -29,6 +29,4 @@ public struct UnityMeshData(Material material) : IUnityMeshData
     public int IndicesCount { get; set; } = 0;
 
     public int Order { get; set; } = 0;
-
-    public float ColorAlphaMultiplier { get; set; } = 1;
 }
