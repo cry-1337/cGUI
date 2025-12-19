@@ -41,9 +41,5 @@ public class HoverableElement(string id, GUIRectangle dummy, Material material) 
         m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, GUIColor.White, new UnityMeshData(m_Material)).Build();
     }
 
-    public override void OnRender(RenderEvent reason)
-    {
-        reason.Render.PushMesh(m_Context);
-        reason.Render.Render();
-    }
+    public override void OnRender(RenderEvent reason) => reason.Render.PushMesh(m_Context);
 }
