@@ -6,8 +6,6 @@ namespace cGUI.Unity.Render;
 
 public struct UnityMeshData(Material material) : IUnityMeshData
 {
-    public Texture? MainTexture { get; set; } = null;
-
     public Material Material { get; set; } = material;
 
     public MaterialPropertyBlock? MaterialProperties { get; set; } = null;
@@ -17,8 +15,6 @@ public struct UnityMeshData(Material material) : IUnityMeshData
     public MeshTopology Topology { get; set; } = MeshTopology.Triangles;
 
     public GUIRectangle? MaskRect { get; set; } = null;
-
-    public GUIRectangle? CornerRoundRadius { get; set; } = null;
 
     public int IndiciesOffset { get; set; } = 0;
 
