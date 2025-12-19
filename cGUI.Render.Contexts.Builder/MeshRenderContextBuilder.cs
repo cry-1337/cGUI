@@ -98,7 +98,6 @@ public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue
             
             GUIRectangle rect = new(minX, minY, maxX - minX, maxY - minY);
 
-            if (m_MeshValue == null) throw new InvalidOperationException($"Line in \"{nameof(MeshRenderContextBuilder<,>)}\" can't create MeshData. (MeshData is null)");
             AddRect(rect, c0, c0, c1, c1, meshData);
         }
 
