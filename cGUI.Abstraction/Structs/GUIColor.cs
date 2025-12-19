@@ -55,6 +55,15 @@ public struct GUIColor : IEquatable<GUIColor>, IInterpolatable<GUIColor>
         }
     }
 
+    public static GUIColor Clear
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            return new(0, 0, 0, 0);
+        }
+    }
+
     public GUIColor(byte r, byte g, byte b)
     {
         R = r;
