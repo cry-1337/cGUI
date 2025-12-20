@@ -90,11 +90,13 @@ public abstract class VisualContainer<TVisualElement>(string id) : VisualElement
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void HandleEvents<TEvent>(in TEvent reason) where TEvent : IEvent
     {
+        if (this is IEventHandler<TEvent> containerHandler) containerHandler.Handle(reason);
+
         foreach (var element in m_Elements)
         {
-            if (element is not IEventHandler<TEvent> handler) continue;
-            if (element is IEventMicroController<TEvent> microController && microController.GetEvent(reason)) handler.Handle(reason);
-            else if (element is not IEventMicroController<TEvent>) handler.Handle(reason);
+            if (element is not IEventHandler<TEvent> elementHandler) continue;
+            if (element is IEventMicroController<TEvent> microController && microController.GetEvent(reason)) elementHandler.Handle(reason);
+            else if (element is not IEventMicroController<TEvent>) elementHandler.Handle(reason);
         }
     }
 }
