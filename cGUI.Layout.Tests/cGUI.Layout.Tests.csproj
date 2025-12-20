@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\cGUI.Layout.Abstraction\cGUI.Layout.Abstraction.csproj" />
-    <ProjectReference Include="..\cGUI.Layout.Strategies\cGUI.Layout.Strategies.csproj" />
     <ProjectReference Include="..\cGUI.Layout\cGUI.Layout.csproj" />
   </ItemGroup>
 

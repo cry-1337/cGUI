@@ -6,24 +6,15 @@ namespace cGUI.Unity.Render;
 
 public sealed class UnityRender(IRenderGraphics renderGraphics) : IRender
 {
-    private readonly Queue<IRenderContext> m_RenderContexts = new(12);
     private IRenderGraphics m_RenderGraphics = renderGraphics;
 
-    public void PushMesh(IMeshRenderContext ctx) => m_RenderContexts.Enqueue(ctx);
-    public void PushRenderGraphics(IRenderGraphics graphics) => m_RenderGraphics = graphics;
-
-    public void Render()
+    public void PushMesh(IMeshRenderContext ctx)
     {
         m_RenderGraphics.SetViewProjection(new(0, 0, Screen.width, Screen.height));
-
-        while (m_RenderContexts.Count > 0)
-        {
-            var ctx = m_RenderContexts.Dequeue();
-            m_RenderGraphics.Process(ctx);
-            ctx.Clear();
-        }
+        m_RenderGraphics.Process(ctx);
         ProcessBuffer();
     }
+    public void PushRenderGraphics(IRenderGraphics graphics) => m_RenderGraphics = graphics;
 
     public void ProcessBuffer() => m_RenderGraphics.ExecuteBuffer();
 

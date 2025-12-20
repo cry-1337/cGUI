@@ -5,6 +5,6 @@ namespace cGUI.Layout.Abstraction;
 
 public interface ILayout : IResetable
 {
-    void PushStrategy(ILayoutStrategy strategy);
-    GUIRectangle PerformLayout(GUIRectangle rect, in GUIRectangle parent);
+    void PushNode(LayoutNode node);
+    void PerformLayout(in GUIRectangle screenBounds);
 }
