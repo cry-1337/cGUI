@@ -1,5 +1,4 @@
 ﻿using cGUI.Abstraction.Structs;
-using cGUI.Event.Abstraction;
 using cGUI.Events.Models;
 using cGUI.Layout.Abstraction;
 using cGUI.Render.Abstraction;
@@ -41,5 +40,9 @@ public class HoverableElement(string id, GUIRectangle dummy, Material material) 
         m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, GUIColor.White, new UnityMeshData(m_Material)).Build();
     }
 
-    public override void OnRender(RenderEvent reason) => reason.Render.PushMesh(m_Context);
+    public override void OnRender(RenderEvent reason)
+    {
+        reason.Render.PushMesh(m_Context);
+        m_Context.Clear();
+    }
 }
