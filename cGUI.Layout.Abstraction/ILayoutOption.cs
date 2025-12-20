@@ -2,7 +2,7 @@
 
 namespace cGUI.Layout.Abstraction;
 
-public interface ILayoutStrategy
+public interface ILayoutOption
 {
     GUIRectangle ProcessLayout(GUIRectangle desiredRect, LayoutState state, out LayoutState newState);
 }

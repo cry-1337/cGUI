@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace cGUI.Layout.Abstraction;
 
-public struct LayoutNode(IElement element, GUIRectangle desiredRect, List<ILayoutStrategy> strategies)
+public struct LayoutNode(IElement element, GUIRectangle desiredRect, List<ILayoutOption> strategies)
 {
     public IElement Element = element;
     public GUIRectangle DesiredRect = desiredRect;
-    public List<ILayoutStrategy> Strategies = strategies;
+    public List<ILayoutOption> Strategies = strategies;
 }
