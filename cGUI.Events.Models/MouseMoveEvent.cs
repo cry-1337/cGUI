@@ -2,4 +2,4 @@
 
 namespace cGUI.Events.Models;
 
-public class MouseMoveEvent(GUIVector2 localMousePosition, GUIVector2 globalMousePosition) : MouseEvent(localMousePosition, globalMousePosition);
+public class MouseMoveEvent(GUIVector2 globalMousePosition) : MouseEvent(globalMousePosition);

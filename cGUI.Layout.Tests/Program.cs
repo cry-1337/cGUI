@@ -6,7 +6,7 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        var layout = new Layout();
+        var layout = new ElementLayout();
 
         Console.ReadLine();
     }

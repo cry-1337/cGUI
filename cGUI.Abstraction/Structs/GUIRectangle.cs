@@ -1,9 +1,10 @@
 ﻿using cGUI.Abstraction.Interfaces;
 using cGUI.Math;
+using System;
 
 namespace cGUI.Abstraction.Structs;
 
-public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
+public partial struct GUIRectangle : IEquatable<GUIRectangle>, IInterpolatable<GUIRectangle>
 {
     private float m_X, m_Y, m_Width, m_Height;
 
@@ -26,8 +27,8 @@ public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
 
     public readonly GUIVector2 Center => new(m_X + m_Width / 2f, m_Y + m_Height / 2f);
 
-    public readonly GUIPoint Position => new(m_X, m_Y);
-    public readonly GUIPoint Size => new(m_Width, m_Height);
+    public readonly GUIVector2 Position => new(m_X, m_Y);
+    public readonly GUIVector2 Size => new(m_Width, m_Height);
 
     public static GUIRectangle Zero => new();
 
@@ -47,6 +48,14 @@ public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
         m_Height = size.Y;
     }
 
+    public GUIRectangle(GUIVector2 position, GUIVector2 size)
+    {
+        m_X = position.X;
+        m_Y = position.Y;
+        m_Width = size.X;
+        m_Height = size.Y;
+    }
+
     public GUIRectangle(float side)
     {
         m_X = side;
@@ -56,6 +65,7 @@ public partial struct GUIRectangle : IInterpolatable<GUIRectangle>
     }
 
     public readonly bool Contains(GUIPoint point) => point.X >= m_X && point.Y >= m_Y && point.X <= m_Width && point.Y <= m_Height;
+    public bool Equals(GUIRectangle other) => other.X == X && other.Y == Y && other.Width == Width && other.Height == Height;
 
     public readonly override string ToString() => $"(X:{X}, Y:{Y}, W:{Width}, H:{Height})";
 

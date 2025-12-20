@@ -12,55 +12,27 @@ public enum EDockType
     Fill
 }
 
-public class DockOption(EDockType dockType) : ILayoutOption
+public struct DockOption(EDockType dockType) : ILayoutOption
 {
-    public GUIRectangle ProcessLayout(GUIRectangle desiredRect, ref LayoutState state)
+    public GUIRectangle ProcessLayout(GUIRectangle desiredRect, ref LayoutContext context)
     {
-        GUIRectangle remaining = state.RemainingBounds;
-        GUIRectangle result = remaining;
+        var rem = context.RemainingRect;
+        var size = desiredRect;
 
         switch (dockType)
         {
-            case EDockType.Left:
-                // Устанавливаем ширину из желаемой, высоту на весь остаток
-                result.Width = desiredRect.Width;
-
-                // Сдвигаем оставшуюся область вправо
-                state.RemainingBounds.X += result.Width;
-                state.RemainingBounds.Width -= result.Width;
-                break;
-
+            default:
             case EDockType.Top:
-                // Устанавливаем высоту из желаемой, ширина на весь остаток
-                result.Height = desiredRect.Height;
-
-                // Сдвигаем оставшуюся область вниз
-                state.RemainingBounds.Y += result.Height;
-                state.RemainingBounds.Height -= result.Height;
-                break;
-
-            case EDockType.Right:
-                // Устанавливаем ширину, прижимаем к правому краю остатка
-                result.Width = desiredRect.Width;
-                result.X = remaining.X + remaining.Width - result.Width;
-
-                // Уменьшаем ширину остатка справа
-                state.RemainingBounds.Width -= result.Width;
-                break;
-
+                desiredRect = rem with { Y = rem.Y + rem.Height - size.Height, Height = size.Height };
+                context.RemainingRect = rem with { Height = rem.Height - size.Height };
+                return desiredRect;
             case EDockType.Bottom:
-                // Устанавливаем высоту, прижимаем к нижнему краю остатка
-                result.Height = desiredRect.Height;
-                result.Y = remaining.Y + remaining.Height - result.Height;
-
-                // Уменьшаем высоту остатка снизу
-                state.RemainingBounds.Height -= result.Height;
-                break;
-
+                desiredRect = rem with { Height = size.Height };
+                context.RemainingRect = rem with { Y = rem.Y + size.Height, Height = rem.Height - size.Height };
+                return desiredRect;
             case EDockType.Fill:
-                break;
+                desiredRect = rem;
+                return desiredRect;
         }
-
-        return result;
     }
 }
