@@ -7,6 +7,7 @@
     <ProjectReference Include="..\cGUI.Events.Models\cGUI.Events.Models.csproj" />
     <ProjectReference Include="..\cGUI.Event\cGUI.Event.csproj" />
     <ProjectReference Include="..\cGUI.Layout.Abstraction\cGUI.Layout.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Layout.Options\cGUI.Layout.Options.csproj" />
     <ProjectReference Include="..\cGUI.Layout\cGUI.Layout.csproj" />
     <ProjectReference Include="..\cGUI.Math\cGUI.Math.csproj" />
     <ProjectReference Include="..\cGUI.Render.Abstraction\cGUI.Render.Abstraction.csproj" />

@@ -13,19 +13,6 @@ namespace cGUI.Elements.BaseElements;
 
 public class HoverableElement(string id, GUIRectangle dummy, Material material) : VisualElement(id)
 {
-    private class SimpleOption : ILayoutOption
-    {
-        public GUIRectangle ProcessLayout(GUIRectangle desiredRect, LayoutState state, out LayoutState newState)
-        {
-            desiredRect.X = state.RemainingBounds.X;
-
-            newState = state;
-            newState.RemainingBounds.X += desiredRect.Width;
-
-            return desiredRect;
-        }
-    }
-
     private readonly GUIRectangle m_Dummy = dummy;
     private readonly Material m_Material = material;
     private IMeshRenderContext<IUnityMeshData> m_Context = new UnityMeshRenderContext();
@@ -34,7 +21,7 @@ public class HoverableElement(string id, GUIRectangle dummy, Material material) 
     {
         var layout = reason.Layout;
 
-        layout.PushNode(new LayoutNode(this, m_Dummy, [new SimpleOption()]));
+        layout.PushNode(new LayoutNode(this, m_Dummy, []));
         layout.PerformLayout(Parent != null ? Parent.Bounds : new GUIRectangle(0, 0, Screen.width, Screen.height));
 
         m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, GUIColor.White, new UnityMeshData(m_Material)).Build();

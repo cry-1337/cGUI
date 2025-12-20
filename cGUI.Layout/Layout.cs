@@ -16,7 +16,7 @@ public class Layout : ILayout
 
         foreach (var node in m_Nodes)
             foreach (var strategy in node.Strategies)
-                node.Element.Bounds = strategy.ProcessLayout(node.DesiredRect, layoutState, out layoutState);
+                node.Element.Bounds = strategy.ProcessLayout(node.DesiredRect, ref layoutState);
     }
 
     public void Reset() => m_Nodes.Clear();
