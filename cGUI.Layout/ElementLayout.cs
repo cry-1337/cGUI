@@ -1,4 +1,5 @@
-﻿using cGUI.Layout.Abstraction;
+﻿using cGUI.Abstraction.Structs;
+using cGUI.Layout.Abstraction;
 using System.Collections.Generic;
 
 namespace cGUI.Layout;
@@ -12,8 +13,14 @@ public class ElementLayout : IElementLayout
     public void PerformLayout(LayoutContext layoutContext)
     {
         foreach (var node in m_Nodes)
+        {
+            GUIRectangle currentRect = node.DesiredRect;
+
             foreach (var strategy in node.Strategies)
-                node.Element.Bounds = strategy.ProcessLayout(node.DesiredRect, ref layoutContext);
+                currentRect = strategy.ProcessLayout(currentRect, ref layoutContext);
+
+            node.Element.Bounds = currentRect;
+        }
     }
 
     public void Reset() => m_Nodes.Clear();
