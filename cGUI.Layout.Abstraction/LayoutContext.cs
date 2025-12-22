@@ -2,7 +2,7 @@
 
 namespace cGUI.Layout.Abstraction;
 
-public struct LayoutContext()
+public ref struct LayoutContext()
 {
     public GUIRectangle ParentRect;
     public GUIRectangle RemainingRect;
