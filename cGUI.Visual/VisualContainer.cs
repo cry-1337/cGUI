@@ -4,6 +4,7 @@ using cGUI.Event.Abstraction;
 using cGUI.Events.Models;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 namespace cGUI.Visual;
 
@@ -75,17 +76,17 @@ public abstract class VisualContainer<TVisualElement>(string id) : VisualElement
 
     IElement IContainer.Find(int index) => Find(index);
 
-    public override void OnRender(RenderEvent e) => RenderElements(e);
+    public override void OnRender(in RenderEvent e) => RenderElements(e);
 
     protected virtual void RenderElements(RenderEvent e) => m_Elements.ForEach(element => RenderElement(e, element));
 
     protected virtual void RenderElement<TElement>(RenderEvent e, TElement element) where TElement : VisualElement, IEventHandler<RenderEvent> => element.Handle(e);
 
-    public override void OnLayout(LayoutEvent e) => LayoutElements(e);
+    public override void OnLayout(in LayoutEvent e) => LayoutElements(e);
 
-    protected virtual void LayoutElements(LayoutEvent e) => m_Elements.ForEach(element => LayoutElement(e, element));
+    protected virtual void LayoutElements(in LayoutEvent e) { foreach (var item in m_Elements) LayoutElement(e, item); }
 
-    protected virtual void LayoutElement<TElement>(LayoutEvent e, TElement element) where TElement : VisualElement, IEventHandler<LayoutEvent> => element.Handle(e);
+    protected virtual void LayoutElement<TElement>(in LayoutEvent e, TElement element) where TElement : VisualElement, IEventHandler<LayoutEvent> => element.Handle(e);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void HandleEvents<TEvent>(in TEvent reason) where TEvent : IEvent

@@ -20,16 +20,17 @@ public class HoverableElement(string id, GUIRectangle dummy, Material material, 
     private readonly GUIColor m_Color = color;
     private IMeshRenderContext<IUnityMeshData> m_Context = new UnityMeshRenderContext();
 
-    public override void OnLayout(LayoutEvent reason)
+    public override void OnLayout(in LayoutEvent reason)
     {
         var layout = reason.Layout;
+        var node = new LayoutNode(this, m_Dummy, [new DockOption(m_DockType)]);
 
-        layout.PushNode(new LayoutNode(this, m_Dummy, [new DockOption(m_DockType)]));
+        layout.PushNode(ref node);
 
         m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, m_Color, new UnityMeshData(m_Material)).Build();
     }
 
-    public override void OnRender(RenderEvent reason)
+    public override void OnRender(in RenderEvent reason)
     {
         reason.Render.PushMesh(m_Context);
         m_Context.Clear();

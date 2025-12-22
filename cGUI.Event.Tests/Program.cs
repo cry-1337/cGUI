@@ -13,12 +13,14 @@ public class Program
 
     private class TestElement(string id) : VisualElement(id)
     {
-        public override void OnLayout(LayoutEvent reason)
+        public override void OnLayout(in LayoutEvent reason)
         {
+            throw new NotImplementedException();
         }
 
-        public override void OnRender(RenderEvent reason)
+        public override void OnRender(in RenderEvent reason)
         {
+            throw new NotImplementedException();
         }
     }
 

@@ -8,6 +8,6 @@ public interface IVisualElement : IElement, IEventHandler<LayoutEvent>, IEventHa
 {
     bool IsMaskable { get; }
 
-    void OnRender(RenderEvent reason);
-    void OnLayout(LayoutEvent reason);
+    void OnRender(in RenderEvent reason);
+    void OnLayout(in LayoutEvent reason);
 }

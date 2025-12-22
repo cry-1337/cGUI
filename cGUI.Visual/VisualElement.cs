@@ -37,8 +37,8 @@ public abstract class VisualElement(string id) : IVisualElement
         return false;
     }
 
-    public abstract void OnLayout(LayoutEvent reason);
-    public abstract void OnRender(RenderEvent reason);
+    public abstract void OnLayout(in LayoutEvent reason);
+    public abstract void OnRender(in RenderEvent reason);
 
     bool IEventHandler<LayoutEvent>.Handle(LayoutEvent reason) { OnLayout(reason); return true; }
 

@@ -6,9 +6,9 @@ namespace cGUI.Layout;
 
 public class ElementLayout : IElementLayout
 {
-    private List<LayoutNode> m_Nodes = new(32);
+    private readonly List<LayoutNode> m_Nodes = new(32);
 
-    public void PushNode(LayoutNode node) => m_Nodes.Add(node);
+    public void PushNode(ref LayoutNode node) => m_Nodes.Add(node);
 
     public void PerformLayout(LayoutContext layoutContext)
     {

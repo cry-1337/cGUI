@@ -4,6 +4,6 @@ namespace cGUI.Layout.Abstraction;
 
 public interface IElementLayout : IResetable
 {
-    void PushNode(LayoutNode node);
+    void PushNode(ref LayoutNode node);
     void PerformLayout(LayoutContext context);
 }
