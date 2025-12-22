@@ -1,9 +1,10 @@
 ﻿using cGUI.Abstraction.Interfaces;
 using cGUI.Math;
+using System;
 
 namespace cGUI.Abstraction.Structs;
 
-public struct GUIVector3 : IInterpolatable<GUIVector3>
+public struct GUIVector3 : IEquatable<GUIVector3>, IInterpolatable<GUIVector3>
 {
     public float X, Y, Z;
 
@@ -36,6 +37,7 @@ public struct GUIVector3 : IInterpolatable<GUIVector3>
     }
 
     public readonly override string ToString() => $"(X:{X}, Y:{Y}, Z:{Z})";
+    public bool Equals(GUIVector3 other) => other.X == X && other.Y == Y && other.Z == Z;
 
     public GUIVector3 Lerp(GUIVector3 b, float t)
     {

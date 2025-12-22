@@ -3,8 +3,7 @@ using cGUI.Layout.Abstraction;
 
 namespace cGUI.Events.Models;
 
-public readonly struct LayoutEvent(IElementLayout layout, bool force = false) : IEvent
+public readonly struct PostLayoutEvent(IElementLayout layout) : IEvent
 {
     public readonly IElementLayout Layout = layout;
-    public readonly bool Force = force;
 }
