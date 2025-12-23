@@ -2,4 +2,4 @@
 
 namespace cGUI.Events.Models;
 
-public record PreLayoutEvent : IEvent;
+public readonly struct PreLayoutEvent : IEvent;

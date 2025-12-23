@@ -5,7 +5,7 @@ namespace cGUI.Event;
 
 public sealed class EventDispatcher : IEventDispatcher
 {
-    public void Dispatch<TEvent, TOwnerKey>(TOwnerKey ownerKey, TEvent e)
+    public void Dispatch<TEvent, TOwnerKey>(TOwnerKey ownerKey, in TEvent e)
         where TEvent : IEvent
         where TOwnerKey : notnull
     {
