@@ -1,6 +1,4 @@
-﻿using cGUI.Abstraction.Interfaces;
-
-namespace cGUI.Event.Abstraction;
+﻿namespace cGUI.Event.Abstraction;
 
 public interface IEventDispatcher
 {

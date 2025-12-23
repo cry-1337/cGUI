@@ -2,4 +2,7 @@
 
 namespace cGUI.Events.Models;
 
-public readonly struct PreLayoutEvent : IEvent;
+public readonly struct PreLayoutEvent(float deltaTime) : IEvent
+{
+    public readonly float DeltaTime = deltaTime;
+}
