@@ -1,6 +1,6 @@
 ﻿using cGUI.Event.Abstraction;
 
-namespace cGUI.Events.Models;
+namespace cGUI.Events.Models.Render;
 
 public readonly struct PreRenderEvent(float deltaTime) : IEvent
 {

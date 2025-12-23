@@ -1,7 +1,7 @@
 ﻿using cGUI.Event.Abstraction;
 using cGUI.Render.Abstraction;
 
-namespace cGUI.Events.Models;
+namespace cGUI.Events.Models.Render;
 
 public readonly struct RenderEvent(IRender render) : IEvent
 {

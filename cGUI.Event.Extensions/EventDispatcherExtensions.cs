@@ -1,5 +1,4 @@
 ﻿using cGUI.Event.Abstraction;
-using cGUI.Events.Models;
 using cGUI.Visual.Abstraction;
 using System;
 using System.Runtime.CompilerServices;

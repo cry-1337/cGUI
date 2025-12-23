@@ -1,6 +1,6 @@
 ﻿using cGUI.Event.Abstraction;
 
-namespace cGUI.Events.Models;
+namespace cGUI.Events.Models.Layout;
 
 public readonly struct PreLayoutEvent(float deltaTime) : IEvent
 {
