@@ -13,15 +13,6 @@ public class Program
 
     private class TestElement(string id) : VisualElement(id)
     {
-        public override void OnLayout(in LayoutEvent reason)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void OnRender(in RenderEvent reason)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     private static void Main(string[] args)
@@ -33,7 +24,7 @@ public class Program
         container.Add(new TestElement("53"));
 
         //disp.Spread<RenderEvent>(container, new());
-        disp.Spread<LayoutEvent>(container, new());
+        //disp.Spread<LayoutEvent>(container, new());
 
         Console.ReadLine();
     }

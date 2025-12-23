@@ -2,7 +2,7 @@
 
 namespace cGUI.Events.Models;
 
-public struct PreRenderEvent(float deltaTime) : IEvent
+public readonly struct PreRenderEvent(float deltaTime) : IEvent
 {
-    public float DeltaTime = deltaTime;
+    public readonly float DeltaTime = deltaTime;
 }

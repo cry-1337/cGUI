@@ -3,7 +3,7 @@ using cGUI.Render.Abstraction;
 
 namespace cGUI.Events.Models;
 
-public class RenderEvent(IRender render) : IEvent
+public readonly struct RenderEvent(IRender render) : IEvent
 {
-    public IRender Render { get; set; } = render;
+    public readonly IRender Render = render;
 }

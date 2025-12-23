@@ -1,4 +1,5 @@
 ﻿using cGUI.Abstraction.Structs;
+using cGUI.Event.Abstraction;
 using cGUI.Events.Models;
 using cGUI.Layout.Abstraction;
 using cGUI.Layout.Options;
@@ -12,7 +13,8 @@ using UnityEngine;
 
 namespace cGUI.Elements.BaseElements;
 
-public class HoverableElement(string id, GUIRectangle dummy, Material material, EDockType dock, GUIColor color) : VisualElement(id)
+public class HoverableElement(string id, GUIRectangle dummy, Material material, EDockType dock, GUIColor color) 
+    : VisualElement(id), IEventHandler<LayoutEvent>, IEventHandler<RenderEvent>
 {
     private readonly GUIRectangle m_Dummy = dummy;
     private readonly Material m_Material = material;
@@ -20,7 +22,7 @@ public class HoverableElement(string id, GUIRectangle dummy, Material material, 
     private readonly GUIColor m_Color = color;
     private IMeshRenderContext<IUnityMeshData> m_Context = new UnityMeshRenderContext();
 
-    public override void OnLayout(in LayoutEvent reason)
+    bool IEventHandler<LayoutEvent>.Handle(LayoutEvent reason)
     {
         var layout = reason.Layout;
         var node = new LayoutNode(this, m_Dummy, [new DockOption(m_DockType)]);
@@ -28,11 +30,13 @@ public class HoverableElement(string id, GUIRectangle dummy, Material material, 
         layout.PushNode(ref node);
 
         m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, m_Color, new UnityMeshData(m_Material)).Build();
+        return true;
     }
 
-    public override void OnRender(in RenderEvent reason)
+    bool IEventHandler<RenderEvent>.Handle(RenderEvent reason)
     {
         reason.Render.PushMesh(m_Context);
         m_Context.Clear();
+        return true;
     }
 }

@@ -17,14 +17,10 @@ public static class EventDispatcherExtensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Spread<TEvent>(this IEventDispatcher dispatcher, IVisualElement element, TEvent reason) where TEvent : IEvent
+    public static void Spread<TEvent>(this IEventDispatcher dispatcher, IVisualElement element, ref TEvent reason) where TEvent : IEvent
     {
-        if (reason is RenderEvent rEvent) element.OnRender(rEvent);
-        else if (reason is LayoutEvent lEvent) element.OnLayout(lEvent);
-
-        else if (element is IEventMicroController<TEvent> microController && microController.GetEvent(reason)) dispatcher.Dispatch(element, reason);
-        else if (element is IEventsHandler eventsHandler) eventsHandler.HandleEvents(reason);
-
+        if (element is IEventMicroController<TEvent> microController && microController.GetEvent(reason)) dispatcher.Dispatch(element, in reason);
+        else if (element is IEventsHandler eventsHandler) eventsHandler.HandleEvents(in reason);
         else dispatcher.Dispatch(element, reason);
     }
 }
