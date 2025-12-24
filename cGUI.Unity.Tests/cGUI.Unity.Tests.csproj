@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\cGUI.Abstraction\cGUI.Abstraction.csproj" />
+    <ProjectReference Include="..\cGUI.Convert.Extensions\cGUI.Convert.Extensions.csproj" />
     <ProjectReference Include="..\cGUI.Event.Abstraction\cGUI.Event.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Event.Extensions\cGUI.Event.Extensions.csproj" />
     <ProjectReference Include="..\cGUI.Events.Models\cGUI.Events.Models.csproj" />

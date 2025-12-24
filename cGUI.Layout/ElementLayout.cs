@@ -8,7 +8,7 @@ public class ElementLayout : IElementLayout
 {
     private readonly List<LayoutNode> m_Nodes = new(32);
 
-    public void PushNode(ref LayoutNode node) => m_Nodes.Add(node);
+    public void PushNode(in LayoutNode node) => m_Nodes.Add(node);
 
     public void PerformLayout(LayoutContext layoutContext)
     {
