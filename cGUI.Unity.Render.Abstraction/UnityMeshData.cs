@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace cGUI.Unity.Render;
 
-public struct UnityMeshData(Material material) : IUnityMeshData
+public struct UnityMeshData(in Material material) : IUnityMeshData
 {
     public Material Material { get; set; } = material;
 

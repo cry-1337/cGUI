@@ -1,7 +1,6 @@
 ﻿using cGUI.Abstraction.Structs;
 using cGUI.Render.Abstraction;
 using cGUI.Unity.Render.Abstraction;
-using cGUI.Unity.Render.Extensions;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
@@ -9,7 +8,7 @@ using UnityEngine.Rendering;
 
 namespace cGUI.Unity.Render;
 
-public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext<IUnityMeshData>>
+public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext<UnityMeshData>>
 {
     private static readonly VertexAttributeDescriptor[] m_VertexAttributes =
     [
@@ -22,7 +21,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
     private CommandBuffer m_Buffer = new() { name = nameof(UnityMeshRenderGraphics) };
     private Mesh? m_Mesh;
 
-    public void Process(IMeshRenderContext<IUnityMeshData> ctx)
+    public void Process(IMeshRenderContext<UnityMeshData> ctx)
     {
         const MeshUpdateFlags MESH_UPDATE_FLAGS =
             MeshUpdateFlags.DontNotifyMeshUsers |
@@ -70,7 +69,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
         }
     }
 
-    public void Process(IRenderContext ctx) => Process((IMeshRenderContext<IUnityMeshData>) ctx);
+    public void Process(IRenderContext ctx) => Process((IMeshRenderContext<UnityMeshData>) ctx);
 
     public void SetViewProjection(in GUIRectangle rect)
         => m_Buffer.SetViewProjectionMatrices(Matrix4x4.identity, GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(rect.X, rect.Width, rect.Y, rect.Height, short.MinValue, short.MaxValue), false));

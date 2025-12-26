@@ -12,9 +12,9 @@ public enum EDockType
     Fill
 }
 
-public struct DockOption(EDockType dockType) : ILayoutOption
+public readonly struct DockOption(EDockType dockType) : ILayoutOption
 {
-    public GUIRectangle ProcessLayout(GUIRectangle desiredRect, ref LayoutContext context)
+    public readonly GUIRectangle ProcessLayout(GUIRectangle desiredRect, ref LayoutContext context)
     {
         var rem = context.RemainingRect;
         var size = desiredRect;

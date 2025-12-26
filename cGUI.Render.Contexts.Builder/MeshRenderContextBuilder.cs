@@ -1,6 +1,8 @@
 ﻿using cGUI.Abstraction.Structs;
+using cGUI.Math;
 using cGUI.Render.Abstraction;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace cGUI.Render.Contexts.Builder;
 
@@ -14,16 +16,16 @@ public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue
 
     public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect, in GUIColor color)
     {
-        if (m_MeshValue == null) throw new InvalidOperationException($"Rect in \"{nameof(MeshRenderContextBuilder<,>)}\" can't create MeshData. (MeshData is null)");
-        return AddRect(rect, color, m_MeshValue);
+        if (m_MeshValue == null) ThrowMeshDataNull();
+        return AddRect(rect, color, m_MeshValue!);
     }
 
     public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect,
         in GUIColor colTopLeft, in GUIColor colTopRight,
         in GUIColor colBotLeft, in GUIColor colBotRight)
     {
-        if (m_MeshValue == null) throw new InvalidOperationException($"Rect in \"{nameof(MeshRenderContextBuilder<,>)}\" can't create MeshData. (MeshData is null)");
-        return AddRect(rect, colTopLeft, colTopRight, colBotLeft, colBotRight, m_MeshValue);
+        if (m_MeshValue == null) ThrowMeshDataNull();
+        return AddRect(rect, colTopLeft, colTopRight, colBotLeft, colBotRight, m_MeshValue!);
     }
 
     public IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect, in GUIColor col, TMeshValue meshData)
@@ -71,11 +73,11 @@ public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue
     {
         float dx = b.X - a.X;
         float dy = b.Y - a.Y;
+        float lenSq = dx * dx + dy * dy;
 
-        float len = (float) System.Math.Sqrt(dx * dx + dy * dy);
-        if (len <= float.Epsilon)
-            return this;
+        if (lenSq <= float.Epsilon) return this;
 
+        float len = (float) System.Math.Sqrt(lenSq);
         float nx = -dy / len;
         float ny = dx / len;
 
@@ -83,36 +85,42 @@ public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue
         float outer = half + aaSize;
 
         GUIColor transparent = new(color.R, color.G, color.B, 0);
+        GUIColor opaque = new(color.R, color.G, color.B, 255);
 
-        void AddStrip(float r0, float r1, GUIColor c0, GUIColor c1)
+        InternalAddStrip(ref meshData, a, b, nx, ny, -half, half, color, color);
+
+        if (aaSize > 0)
         {
-            GUIVector2 p0 = new(a.X + nx * r0, a.Y + ny * r0);
-            GUIVector2 p1 = new(a.X + nx * r1, a.Y + ny * r1);
-            GUIVector2 p2 = new(b.X + nx * r1, b.Y + ny * r1);
-            GUIVector2 p3 = new(b.X + nx * r0, b.Y + ny * r0);
-
-            float minX = System.Math.Min(System.Math.Min(p0.X, p1.X), System.Math.Min(p2.X, p3.X));
-            float maxX = System.Math.Max(System.Math.Max(p0.X, p1.X), System.Math.Max(p2.X, p3.X));
-            float minY = System.Math.Min(System.Math.Min(p0.Y, p1.Y), System.Math.Min(p2.Y, p3.Y));
-            float maxY = System.Math.Max(System.Math.Max(p0.Y, p1.Y), System.Math.Max(p2.Y, p3.Y));
-            
-            GUIRectangle rect = new(minX, minY, maxX - minX, maxY - minY);
-
-            AddRect(rect, c0, c0, c1, c1, meshData);
+            InternalAddStrip(ref meshData, a, b, nx, ny, half, outer, opaque, transparent);
+            InternalAddStrip(ref meshData, a, b, nx, ny, -outer, -half, transparent, opaque);
         }
-
-        AddStrip(-half, +half, color, color);
-
-        AddStrip(+half, +outer,
-            new GUIColor(color.R, color.G, color.B, 255),
-            transparent);
-
-        AddStrip(-outer, -half,
-            transparent,
-            new GUIColor(color.R, color.G, color.B, 255));
 
         return this;
     }
 
     public abstract TContextValue Build();
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void InternalAddStrip(ref TMeshValue meshData,
+        GUIVector2 a, GUIVector2 b, float nx, float ny,
+        float r0, float r1, in GUIColor c0, in GUIColor c1)
+    {
+        GUIVector2 p0 = new(a.X + nx * r0, a.Y + ny * r0);
+        GUIVector2 p1 = new(a.X + nx * r1, a.Y + ny * r1);
+        GUIVector2 p2 = new(b.X + nx * r1, b.Y + ny * r1);
+        GUIVector2 p3 = new(b.X + nx * r0, b.Y + ny * r0);
+
+        float minX = GUIMath.Min(GUIMath.Min(p0.X, p1.X), GUIMath.Min(p2.X, p3.X));
+        float maxX = GUIMath.Max(GUIMath.Max(p0.X, p1.X), GUIMath.Max(p2.X, p3.X));
+        float minY = GUIMath.Min(GUIMath.Min(p0.Y, p1.Y), GUIMath.Min(p2.Y, p3.Y));
+        float maxY = GUIMath.Max(GUIMath.Max(p0.Y, p1.Y), GUIMath.Max(p2.Y, p3.Y));
+
+        GUIRectangle rect = new(minX, minY, maxX - minX, maxY - minY);
+
+        AddRect(rect, c0, c0, c1, c1, meshData);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowMeshDataNull()
+        => throw new InvalidOperationException("MeshData is null. Make sure it was passed to the constructor.");
 }

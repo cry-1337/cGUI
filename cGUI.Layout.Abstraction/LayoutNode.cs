@@ -1,12 +1,11 @@
 ﻿using cGUI.Abstraction.Interfaces;
 using cGUI.Abstraction.Structs;
-using System.Collections.Generic;
 
 namespace cGUI.Layout.Abstraction;
 
-public struct LayoutNode(IElement element, GUIRectangle desiredRect, List<ILayoutOption> strategies)
+public struct LayoutNode(IElement element, GUIRectangle desiredRect, ILayoutOption[] strategies)
 {
     public IElement Element = element;
     public GUIRectangle DesiredRect = desiredRect;
-    public List<ILayoutOption> Strategies = strategies;
+    public ILayoutOption[] Strategies = strategies;
 }

@@ -21,14 +21,14 @@ public class HoverableElement(string id, GUIRectangle dummy, Material material, 
     private readonly Material m_Material = material;
     private readonly EDockType m_DockType = dock;
     private readonly GUIColor m_Color = color;
-    private IMeshRenderContext<IUnityMeshData> m_Context = new UnityMeshRenderContext();
+    private IMeshRenderContext<UnityMeshData> m_Context = new UnityMeshRenderContext();
 
     bool IEventHandler<LayoutEvent>.Handle(LayoutEvent reason)
     {
         var layout = reason.Layout;
         var node = new LayoutNode(this, m_Dummy, [new DockOption(m_DockType)]);
 
-        layout.PushNode(ref node);
+        layout.PushNode(node);
 
         m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, m_Color, new UnityMeshData(m_Material)).Build();
         return true;

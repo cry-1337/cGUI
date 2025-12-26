@@ -8,5 +8,6 @@
     <ProjectReference Include="..\cGUI.Render.Abstraction\cGUI.Render.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render.Abstraction\cGUI.Unity.Render.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render.Contexts\cGUI.Unity.Render.Contexts.csproj" />
+    <ProjectReference Include="..\cGUI.Unity.Render\cGUI.Unity.Render.csproj" />
   </ItemGroup>
 </Project>
