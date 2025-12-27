@@ -5,12 +5,12 @@ namespace cGUI.Render.Abstraction;
 
 public interface IRenderGraphics : IDisposable
 {
-    void Process(IRenderContext ctx);
+    void Process(in IRenderContext ctx);
     void SetViewProjection(in GUIRectangle rect);
     void ExecuteBuffer();
 }
 
-public interface IRenderGraphics<in TContext> : IRenderGraphics where TContext : IRenderContext
+public interface IRenderGraphics<TContext> : IRenderGraphics where TContext : IRenderContext
 {
-    void Process(TContext ctx);
+    void Process(in TContext ctx);
 }
