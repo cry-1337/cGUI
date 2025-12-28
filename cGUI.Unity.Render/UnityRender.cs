@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace cGUI.Unity.Render;
 
-public sealed class UnityRender(IRenderGraphics renderGraphics) : IRender
+public sealed class UnityMeshRender(IRenderGraphics renderGraphics) : IRender
 {
     private IRenderGraphics m_RenderGraphics = renderGraphics;
 

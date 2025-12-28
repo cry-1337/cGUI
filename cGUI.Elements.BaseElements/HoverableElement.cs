@@ -36,7 +36,7 @@ public class HoverableElement(string id, GUIRectangle dummy, Material material, 
 
     bool IEventHandler<RenderEvent>.Handle(RenderEvent reason)
     {
-        reason.Render.PushMesh(m_Context);
+        //reason.Render.PushMeshContext(m_Context);
         m_Context.Clear();
         return true;
     }
