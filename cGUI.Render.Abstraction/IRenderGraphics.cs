@@ -10,7 +10,7 @@ public interface IRenderGraphics : IDisposable
     void ExecuteBuffer();
 }
 
-public interface IRenderGraphics<TContext> : IRenderGraphics where TContext : IRenderContext
+public interface IRenderGraphics<in TContext> : IRenderGraphics where TContext : IRenderContext
 {
-    void Process(in TContext ctx);
+    void Process(TContext ctx);
 }
