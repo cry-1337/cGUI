@@ -2,9 +2,10 @@
 
 namespace cGUI.Render.Abstraction;
 
-public interface IRender : IDisposable
+public interface IRender<TValue> : IDisposable
+    where TValue : IRenderContext
 {
-    void PushMesh(in IMeshRenderContext ctx);
-    void PushRenderGraphics(IRenderGraphics graphics);
+    void PushMesh(TValue ctx);
+    void PushRenderGraphics(IRenderGraphics<TValue> graphics);
     void ProcessBuffer();
 }
