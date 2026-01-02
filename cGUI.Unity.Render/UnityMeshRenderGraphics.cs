@@ -69,8 +69,6 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
         }
     }
 
-    public void Process(in IRenderContext ctx) => Process((IMeshRenderContext<IUnityMeshData>) ctx);
-
     public void SetViewProjection(in GUIRectangle rect)
         => m_Buffer.SetViewProjectionMatrices(Matrix4x4.identity, GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(rect.X, rect.Width, rect.Y, rect.Height, short.MinValue, short.MaxValue), false));
 
