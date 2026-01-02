@@ -1,8 +1,7 @@
 ﻿using cGUI.Abstraction.Structs;
-using cGUI.Unity.Render.Abstraction;
 using UnityEngine;
 
-namespace cGUI.Unity.Render;
+namespace cGUI.Unity.Render.Abstraction;
 
 public struct UnityMeshData(in Material material) : IUnityMeshData
 {
