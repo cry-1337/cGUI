@@ -13,5 +13,5 @@ public interface IMeshRenderContext : IRenderContext
 public interface IMeshRenderContext<TValue> : IMeshRenderContext where TValue : IMeshData
 {
     List<TValue> Meshes { get; }
-    int MeshCount { get; }
+    int MeshesCount { get; }
 }
