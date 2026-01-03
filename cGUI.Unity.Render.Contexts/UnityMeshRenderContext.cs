@@ -12,7 +12,7 @@ public readonly struct UnityMeshRenderContext() : IMeshRenderContext<IUnityMeshD
 
     public List<IUnityMeshData> Meshes => m_Meshes;
 
-    public readonly int MeshCount => m_Meshes.Count;
+    public readonly int MeshesCount => m_Meshes.Count;
 
     public readonly int VerticiesCount => m_Vertices.Count;
 
