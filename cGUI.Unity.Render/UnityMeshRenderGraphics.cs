@@ -43,8 +43,8 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
         m_Mesh.SetVertexBufferData(ctx.Vertices, 0, 0, ctx.VerticiesCount, 0, MESH_UPDATE_FLAGS);
         m_Mesh.SetIndexBufferData(ctx.Indicies, 0, 0, ctx.IndiciesCount, MESH_UPDATE_FLAGS);
 
-        var descriptors = new NativeArray<SubMeshDescriptor>(ctx.MeshCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
-        for (int i = 0; i < ctx.MeshCount; i++)
+        var descriptors = new NativeArray<SubMeshDescriptor>(ctx.MeshesCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+        for (int i = 0; i < ctx.MeshesCount; i++)
         {
             IUnityMeshData data = ctx.Meshes.ElementAt(i);
 
@@ -62,7 +62,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
 
         m_Mesh.UploadMeshData(false);
 
-        for (int i = 0; i < ctx.MeshCount; i++)
+        for (int i = 0; i < ctx.MeshesCount; i++)
         {
             IUnityMeshData data = ctx.Meshes.ElementAt(i);
             m_Buffer.DrawMesh(m_Mesh, Matrix4x4.TRS(Vector3.zero, data.Rotation, Vector3.one), data.Material, i, -1, data.MaterialProperties);
