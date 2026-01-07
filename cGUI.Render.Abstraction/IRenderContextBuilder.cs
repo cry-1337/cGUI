@@ -2,8 +2,8 @@
 
 namespace cGUI.Render.Abstraction;
 
-public interface IRenderContextBuilder<TContextValue, TMeshValue>
-    where TContextValue : IRenderContext
+public interface IRenderContextBuilder<TContextValue, TMeshValue> 
+    where TContextValue : IRenderContext 
     where TMeshValue : IMeshData
 {
     IRenderContextBuilder<TContextValue, TMeshValue> AddRect(in GUIRectangle rect, in GUIColor color);

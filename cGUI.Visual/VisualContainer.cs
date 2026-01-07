@@ -1,10 +1,8 @@
 ﻿using cGUI.Abstraction.Interfaces;
 using cGUI.Abstraction.Structs;
 using cGUI.Event.Abstraction;
-using cGUI.Events.Models;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 
 namespace cGUI.Visual;
 

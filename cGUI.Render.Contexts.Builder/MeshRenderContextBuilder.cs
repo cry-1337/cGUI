@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace cGUI.Render.Contexts.Builder;
 
-/// <param name="meshValue">Will be used in methods without MeshValue (example: AddRect(rect, color)) instead of creating new instances of MeshData</param>
+//@todo: rework
 public abstract partial class MeshRenderContextBuilder<TContextValue, TMeshValue>(TContextValue ctx, TMeshValue? meshValue) : IRenderContextBuilder<TContextValue, TMeshValue>
     where TContextValue : IMeshRenderContext<TMeshValue>
     where TMeshValue : IMeshData
