@@ -4,7 +4,7 @@ using cGUI.Unity.Render.Abstraction;
 
 namespace cGUI.Events.Models.Render;
 
-public readonly struct RenderEvent(IRender<IMeshRenderContext<IUnityMeshData>> render) : IEvent
+public readonly struct RenderEvent(IRender<IMeshRenderContext<UnityMeshData>> render) : IEvent
 {
-    public readonly IRender<IMeshRenderContext<IUnityMeshData>> Render = render;
+    public readonly IRender<IMeshRenderContext<UnityMeshData>> Render = render;
 }

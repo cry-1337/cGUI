@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 
 namespace cGUI.Unity.Render;
 
-public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext<IUnityMeshData>>
+public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext<UnityMeshData>>
 {
     private static readonly VertexAttributeDescriptor[] m_VertexAttributes =
     [
@@ -21,7 +21,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
     private CommandBuffer m_Buffer = new() { name = nameof(UnityMeshRenderGraphics) };
     private Mesh? m_Mesh;
 
-    public void Process(IMeshRenderContext<IUnityMeshData> ctx)
+    public void Process(IMeshRenderContext<UnityMeshData> ctx)
     {
         const MeshUpdateFlags MESH_UPDATE_FLAGS =
             MeshUpdateFlags.DontNotifyMeshUsers |
@@ -46,7 +46,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
         var descriptors = new NativeArray<SubMeshDescriptor>(ctx.MeshesCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
         for (int i = 0; i < ctx.MeshesCount; i++)
         {
-            IUnityMeshData data = ctx.Meshes.ElementAt(i);
+            UnityMeshData data = ctx.Meshes.ElementAt(i);
 
             descriptors[i] = new SubMeshDescriptor()
             {
@@ -64,7 +64,7 @@ public sealed class UnityMeshRenderGraphics : IRenderGraphics<IMeshRenderContext
 
         for (int i = 0; i < ctx.MeshesCount; i++)
         {
-            IUnityMeshData data = ctx.Meshes.ElementAt(i);
+            UnityMeshData data = ctx.Meshes.ElementAt(i);
             m_Buffer.DrawMesh(m_Mesh, Matrix4x4.TRS(Vector3.zero, data.Rotation, Vector3.one), data.Material, i, -1, data.MaterialProperties);
         }
     }

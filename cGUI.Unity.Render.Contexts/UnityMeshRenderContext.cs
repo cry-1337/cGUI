@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace cGUI.Unity.Render.Contexts;
 
-public readonly struct UnityMeshRenderContext() : IMeshRenderContext<IUnityMeshData>
+public readonly struct UnityMeshRenderContext() : IMeshRenderContext<UnityMeshData>
 {
-    private readonly List<IUnityMeshData> m_Meshes = new(4);
+    private readonly List<UnityMeshData> m_Meshes = new(4);
     private readonly List<Vertex> m_Vertices = new(12);
     private readonly List<int> m_Indices = new(16);
 
-    public List<IUnityMeshData> Meshes => m_Meshes;
+    public List<UnityMeshData> Meshes => m_Meshes;
 
     public readonly int MeshesCount => m_Meshes.Count;
 
