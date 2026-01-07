@@ -47,6 +47,6 @@ public sealed class EventDispatcher : IEventDispatcher
         where TEvent : IEvent
         where TOwnerKey : notnull
     {
-        public static readonly Dictionary<TOwnerKey, List<IEventHandler<TEvent>>> Handlers = new();
+        public static readonly Dictionary<TOwnerKey, List<IEventHandler<TEvent>>> Handlers = [];
     }
 }
