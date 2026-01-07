@@ -5,7 +5,7 @@ namespace cGUI.Unity.Render.Extensions;
 
 public static class UnityMeshRenderContextEx
 {
-    extension (IMeshRenderContext<IUnityMeshData> ctx)
+    extension (IMeshRenderContext<UnityMeshData> ctx)
     {
         public void AddQuad(in Vertex v1, in Vertex v2, in Vertex v3, in Vertex v4, ref UnityMeshData meshData)
         {
