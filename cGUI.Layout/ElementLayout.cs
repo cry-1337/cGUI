@@ -12,6 +12,8 @@ public class ElementLayout : IElementLayout
 
     public void PerformLayout(LayoutContext layoutContext)
     {
+        layoutContext.ElementsLeft = m_Nodes.Count;
+
         foreach (var node in m_Nodes)
         {
             GUIRectangle currentRect = node.DesiredRect;
@@ -20,6 +22,7 @@ public class ElementLayout : IElementLayout
                 currentRect = strategy.ProcessLayout(currentRect, ref layoutContext);
 
             node.Element.Bounds = currentRect;
+            layoutContext.ElementsLeft--;
         }
     }
 
