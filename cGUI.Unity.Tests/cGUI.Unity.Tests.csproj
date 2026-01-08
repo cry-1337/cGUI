@@ -12,10 +12,8 @@
     <ProjectReference Include="..\cGUI.Layout\cGUI.Layout.csproj" />
     <ProjectReference Include="..\cGUI.Math\cGUI.Math.csproj" />
     <ProjectReference Include="..\cGUI.Render.Abstraction\cGUI.Render.Abstraction.csproj" />
-    <ProjectReference Include="..\cGUI.Render.Contexts.Builder\cGUI.Render.Contexts.Builder.csproj" />
     <ProjectReference Include="..\cGUI.Render.Contexts\cGUI.Render.Contexts.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render.Abstraction\cGUI.Unity.Render.Abstraction.csproj" />
-    <ProjectReference Include="..\cGUI.Unity.Render.Builder\cGUI.Unity.Render.Builder.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render.Contexts\cGUI.Unity.Render.Contexts.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render.Extensions\cGUI.Unity.Render.Extensions.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render\cGUI.Unity.Render.csproj" />

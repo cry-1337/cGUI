@@ -2,9 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="..\cGUI.Event.Abstraction\cGUI.Event.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Layout.Options\cGUI.Layout.Options.csproj" />
-    <ProjectReference Include="..\cGUI.Render.Contexts.Builder\cGUI.Render.Contexts.Builder.csproj" />
     <ProjectReference Include="..\cGUI.Render.Contexts\cGUI.Render.Contexts.csproj" />
-    <ProjectReference Include="..\cGUI.Unity.Render.Builder\cGUI.Unity.Render.Builder.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render.Contexts\cGUI.Unity.Render.Contexts.csproj" />
     <ProjectReference Include="..\cGUI.Unity.Render\cGUI.Unity.Render.csproj" />
     <ProjectReference Include="..\cGUI.Visual.Abstraction\cGUI.Visual.Abstraction.csproj" />
