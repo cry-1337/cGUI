@@ -10,9 +10,10 @@ public class ElementLayout : IElementLayout
 
     public void PushNode(in LayoutNode node) => m_Nodes.Add(node);
 
-    public void PerformLayout(LayoutContext layoutContext)
+    public void PerformLayout(LayoutContext layoutContext, bool overrideElementsCount = false)
     {
-        layoutContext.ElementsLeft = m_Nodes.Count;
+        if (overrideElementsCount)
+            layoutContext.ElementsLeft = m_Nodes.Count;
 
         foreach (var node in m_Nodes)
         {
