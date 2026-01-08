@@ -64,7 +64,7 @@ public partial struct GUIRectangle : IEquatable<GUIRectangle>, IInterpolatable<G
         m_Height = side;
     }
 
-    public readonly bool Contains(GUIPoint point) => point.X >= m_X && point.Y >= m_Y && point.X <= m_Width && point.Y <= m_Height;
+    public readonly bool Contains(GUIPoint point) => point.X >= m_X && point.Y >= m_Y && point.X <= m_X + m_Width && point.Y <= m_Y + m_Height;
     public bool Equals(GUIRectangle other) => other.X == X && other.Y == Y && other.Width == Width && other.Height == Height;
 
     public readonly override string ToString() => $"(X:{X}, Y:{Y}, W:{Width}, H:{Height})";

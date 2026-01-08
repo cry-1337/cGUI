@@ -12,6 +12,8 @@ public static class GUIVector2Ex
             x = vector.X,
             y = vector.Y
         };
+
+        public GUIPoint ToPoint() => new(vector.X, vector.Y);
     }
 
     extension(Vector2 vector)
