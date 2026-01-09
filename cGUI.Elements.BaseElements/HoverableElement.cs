@@ -1,41 +1,65 @@
 ﻿using cGUI.Abstraction.Structs;
+using cGUI.Assert;
+using cGUI.Convert.Extensions;
+using cGUI.Elements.Globals;
+using cGUI.Elements.Models;
 using cGUI.Event.Abstraction;
+using cGUI.Events.Models.Input;
 using cGUI.Events.Models.Layout;
 using cGUI.Events.Models.Render;
 using cGUI.Layout.Abstraction;
-using cGUI.Layout.Options;
 using cGUI.Render.Abstraction;
 using cGUI.Unity.Render.Abstraction;
 using cGUI.Unity.Render.Contexts;
-using cGUI.Visual;
-using UnityEngine;
+using cGUI.Unity.Render.Extensions;
 
 namespace cGUI.Elements.BaseElements;
 
-public class HoverableElement(string id, GUIRectangle dummy, Material material, EDockType dock, GUIColor color) 
-    : VisualElement(id), IEventHandler<LayoutEvent>, IEventHandler<RenderEvent>
+public class HoverableElement : BaseElement, IEventHandler<MouseMoveEvent>, IEventHandler<PostLayoutEvent>
 {
-    private readonly GUIRectangle m_Dummy = dummy;
-    private readonly Material m_Material = material;
-    private readonly EDockType m_DockType = dock;
-    private readonly GUIColor m_Color = color;
-    private IMeshRenderContext<UnityMeshData> m_Context = new UnityMeshRenderContext();
+    private readonly GUIColor m_Color;
+    private readonly GUIColor m_HoveredColor;
+    private readonly IMeshRenderContext<UnityMeshData> m_Context = new UnityMeshRenderContext();
 
-    bool IEventHandler<LayoutEvent>.Handle(LayoutEvent reason)
+    private LayoutNode m_Node;
+    private bool m_IsHovered;
+
+    public HoverableElement(string id, ElementOption options, GUIColor hoveredColor) : base(id)
     {
-        var layout = reason.Layout;
-        var node = new LayoutNode(this, m_Dummy, [new DockOption(m_DockType)]);
+        GUIAssert.IsNull(options.DesiredRect, $"DesiredRect is null in {id}");
+        GUIAssert.IsNull(options.Color, $"Color is null in {id}");
 
-        layout.PushNode(node);
+        IsActive = true;
+        IsHittable = true;
 
-        //m_Context = new UnityMeshRenderContextBuilder(m_Context, null).AddRect(Bounds, m_Color, new UnityMeshData(m_Material)).Build();
-        return true;
+        m_Color = options.Color!.Value;
+        m_HoveredColor = hoveredColor;
+
+        m_Node = new LayoutNode(this, options.DesiredRect, options.LayoutOptions);
     }
 
-    bool IEventHandler<RenderEvent>.Handle(RenderEvent reason)
+    public override void OnRender(RenderEvent reason)
     {
-        //reason.Render.PushMeshContext(m_Context);
+        reason.Render.PushMesh(m_Context);
         m_Context.Clear();
-        return true;
+    }
+
+    public override void OnLayout(LayoutEvent reason)
+    {
+        var layout = reason.Layout;
+        layout.PushNode(m_Node);
+    }
+
+    bool IEventHandler<PostLayoutEvent>.Handle(PostLayoutEvent reason)
+    {
+        var meshData = new UnityMeshData(GUIGlobals.GlobalMaterial!);
+        m_Context.AddRect(Bounds, m_IsHovered ? m_HoveredColor : m_Color, ref meshData);
+        return IsActive;
+    }
+
+    bool IEventHandler<MouseMoveEvent>.Handle(MouseMoveEvent reason)
+    {
+        m_IsHovered = HitTest(reason.GlobalMousePosition.ToPoint(), out var _);
+        return IsActive && IsHittable;
     }
 }
