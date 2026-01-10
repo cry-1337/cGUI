@@ -17,14 +17,14 @@ namespace cGUI.Elements.BaseElements;
 
 public class HoverableElement : BaseElement, IEventHandler<MouseMoveEvent>, IEventHandler<PostLayoutEvent>
 {
-    private readonly GUIColor m_Color;
-    private readonly GUIColor m_HoveredColor;
+    private readonly GUIColor[] m_Color;
+    private readonly GUIColor[] m_HoveredColor;
     private readonly IMeshRenderContext<UnityMeshData> m_Context = new UnityMeshRenderContext();
 
     private LayoutNode m_Node;
     private bool m_IsHovered;
 
-    public HoverableElement(string id, ElementOption options, GUIColor hoveredColor) : base(id)
+    public HoverableElement(string id, ElementOption options, GUIColor[] hoveredColor) : base(id)
     {
         GUIAssert.IsNull(options.DesiredRect, $"DesiredRect is null in {id}");
         GUIAssert.IsNull(options.Color, $"Color is null in {id}");
@@ -32,7 +32,7 @@ public class HoverableElement : BaseElement, IEventHandler<MouseMoveEvent>, IEve
         IsActive = true;
         IsHittable = true;
 
-        m_Color = options.Color!.Value;
+        m_Color = options.Color.Value.Length > 1 ? options.Color.Value : [options.Color.Value[0], options.Color.Value[0], options.Color.Value[0], options.Color.Value[0]];
         m_HoveredColor = hoveredColor;
 
         m_Node = new LayoutNode(this, options.DesiredRect, options.LayoutOptions);
@@ -52,8 +52,10 @@ public class HoverableElement : BaseElement, IEventHandler<MouseMoveEvent>, IEve
 
     bool IEventHandler<PostLayoutEvent>.Handle(PostLayoutEvent reason)
     {
+        var color = m_IsHovered ? m_HoveredColor : m_Color;
+
         var meshData = new UnityMeshData(GUIGlobals.GlobalMaterial!);
-        m_Context.AddRect(Bounds, m_IsHovered ? m_HoveredColor : m_Color, ref meshData);
+        m_Context.AddRect(Bounds, color[0], color[1], color[2], color[3], ref meshData);
         return IsActive;
     }
 
