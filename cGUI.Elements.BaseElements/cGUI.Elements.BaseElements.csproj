@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <ProjectReference Include="..\cGUI.Assert\cGUI.Assert.csproj" />
     <ProjectReference Include="..\cGUI.Convert.Extensions\cGUI.Convert.Extensions.csproj" />
+    <ProjectReference Include="..\cGUI.Elements.Globals\cGUI.Elements.Globals.csproj" />
     <ProjectReference Include="..\cGUI.Elements.Models\cGUI.Elements.Models.csproj" />
     <ProjectReference Include="..\cGUI.Event.Abstraction\cGUI.Event.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Events.Models\cGUI.Events.Models.csproj" />
