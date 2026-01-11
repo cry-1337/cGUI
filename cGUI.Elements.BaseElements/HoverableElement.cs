@@ -53,9 +53,10 @@ public class HoverableElement : BaseElement, IEventHandler<MouseMoveEvent>, IEve
     bool IEventHandler<PostLayoutEvent>.Handle(PostLayoutEvent reason)
     {
         var color = m_IsHovered ? m_HoveredColor : m_Color;
-
         var meshData = new UnityMeshData(GUIGlobals.GlobalMaterial!);
+
         m_Context.AddRect(Bounds, color[0], color[1], color[2], color[3], ref meshData);
+
         return IsActive;
     }
 
