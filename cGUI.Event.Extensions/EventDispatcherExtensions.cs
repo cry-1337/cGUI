@@ -15,7 +15,6 @@ public static class EventDispatcherExtensions
             throw new InvalidOperationException($"Owner does not implement IEventHandler<{typeof(TEvent).Name}>");
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Spread<TEvent>(this IEventDispatcher dispatcher, IVisualElement element, TEvent reason) where TEvent : IEvent
     {
         if (element is IEventMicroController<TEvent> microController && microController.GetEvent(reason)) dispatcher.Dispatch(element, reason);
