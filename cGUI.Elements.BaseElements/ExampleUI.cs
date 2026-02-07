@@ -1,9 +1,10 @@
-using UnityEngine;
 using cGUI.Abstraction.Structs;
 using cGUI.Elements.BaseElements;
 using cGUI.Elements.Models;
 using cGUI.Layout.Abstraction;
 using cGUI.Layout.Options;
+using cGUI.Visual;
+using UnityEngine;
 
 namespace cGUI.Examples;
 
@@ -15,10 +16,8 @@ namespace cGUI.Examples;
 /// - ToggleElement: On/off state with dual color sets
 /// - PanelElement: Container with background + padding for child layout
 /// </summary>
-public class ExampleUI : MonoBehaviour
+public class ExampleUI
 {
-    [SerializeField] private Material m_GuiMaterial = null!;
-
     private PanelElement m_RootPanel = null!;
     private ButtonElement m_IncrementButton = null!;
     private ButtonElement m_DecrementButton = null!;
@@ -27,14 +26,14 @@ public class ExampleUI : MonoBehaviour
 
     private int m_Counter = 0;
 
-    private void Start()
+    /// <summary>
+    /// Creates and returns the root panel with all UI elements.
+    /// Call from UIManager.Start() to initialize the UI.
+    /// </summary>
+    public VisualElement CreateRootPanel()
     {
-        if (m_GuiMaterial == null)
-            m_GuiMaterial = Resources.Load<Material>("Materials/cGUI_SolidQuad");
-
-        cGUI.Elements.Globals.GUIGlobals.GlobalMaterial = m_GuiMaterial;
-
         CreateUI();
+        return m_RootPanel;
     }
 
     private void CreateUI()
@@ -224,8 +223,4 @@ public class ExampleUI : MonoBehaviour
         Debug.Log($"Toggle switched: {(isOn ? "ON" : "OFF")}");
     }
 
-    private void OnDestroy()
-    {
-        cGUI.Elements.Globals.GUIGlobals.GlobalMaterial = null;
-    }
 }
