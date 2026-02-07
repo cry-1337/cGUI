@@ -1,4 +1,5 @@
-﻿using cGUI.Abstraction.Structs;
+﻿using System;
+using cGUI.Abstraction.Structs;
 using cGUI.Animations;
 using cGUI.Convert.Extensions;
 using cGUI.Elements.Models;
@@ -11,7 +12,10 @@ namespace cGUI.Elements.BaseElements;
 
 public class HoverableElement : SimpleElement, IEventHandler<MouseMoveEvent>, IEventHandler<PostLayoutEvent>
 {
+    protected static readonly Func<float, float, float, float> TweenLerp = GUIMath.LerpUnclamped;
+
     protected readonly GUIColor[] m_HoveredColor;
+    protected readonly GUIColor[] m_ColorBuffer = new GUIColor[4];
     protected readonly StateTween<float> m_HoverTween;
     protected bool m_IsHovered;
 
@@ -20,13 +24,14 @@ public class HoverableElement : SimpleElement, IEventHandler<MouseMoveEvent>, IE
         IsHittable = true;
 
         m_HoveredColor = hoveredColor;
-        m_HoverTween = new StateTween<float>(tweenOptions.HoverInDuration, tweenOptions.HoverOutDuration, (a, b, t) => GUIMath.LerpUnclamped(a, b, t), tweenOptions.HoverEasing);
+        m_HoverTween = new StateTween<float>(tweenOptions.HoverInDuration, tweenOptions.HoverOutDuration, TweenLerp, tweenOptions.HoverEasing);
     }
 
     bool IEventHandler<PostLayoutEvent>.Handle(PostLayoutEvent reason)
     {
         m_HoverTween.Update(m_IsHovered, reason.DeltaTime);
-        BuildMesh(ComputeColors());
+        ComputeColors();
+        BuildMesh(m_ColorBuffer);
         return IsActive;
     }
 
@@ -36,21 +41,21 @@ public class HoverableElement : SimpleElement, IEventHandler<MouseMoveEvent>, IE
         return IsActive && IsHittable;
     }
 
-    protected virtual GUIColor[] ComputeColors()
+    protected virtual void ComputeColors()
     {
         float t = m_HoverTween.Evaluate(0f, 1f);
-        return LerpColorArrays(m_Color, m_HoveredColor, t);
+        LerpColors(m_Color, m_HoveredColor, t, m_ColorBuffer);
     }
 
-    protected static GUIColor[] LerpColorArrays(GUIColor[] from, GUIColor[] to, float t)
+    protected static void LerpColors(GUIColor[] from, GUIColor[] to, float t, GUIColor[] result)
     {
-        var result = new GUIColor[from.Length];
-
         for (int i = 0; i < from.Length; i++)
-        {
             result[i] = new GUIColor(from[i]).Lerp(to[i], t);
-        }
+    }
 
-        return result;
+    protected static void LerpColorsInPlace(GUIColor[] buffer, GUIColor[] to, float t)
+    {
+        for (int i = 0; i < buffer.Length; i++)
+            buffer[i] = new GUIColor(buffer[i]).Lerp(to[i], t);
     }
 }

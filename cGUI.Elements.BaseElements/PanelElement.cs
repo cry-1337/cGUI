@@ -28,7 +28,7 @@ public class PanelElement : VisualContainer<BaseElement>, IEventHandler<RenderEv
         IsActive = true;
         IsHittable = false;
 
-        m_Color = options.Color.Value.Length > 1 ? options.Color.Value : [options.Color.Value[0], options.Color.Value[0], options.Color.Value[0], options.Color.Value[0]];
+        m_Color = options.Color.ToQuadColors();
         m_Node = new LayoutNode(this, options.DesiredRect, options.LayoutOptions);
     }
 

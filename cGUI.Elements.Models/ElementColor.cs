@@ -21,4 +21,9 @@ public struct ElementColor
     {
         Value = colors;
     }
+
+    public GUIColor[] ToQuadColors()
+    {
+        return Value.Length > 1 ? Value : [Value[0], Value[0], Value[0], Value[0]];
+    }
 }

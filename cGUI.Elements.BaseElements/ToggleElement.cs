@@ -4,7 +4,6 @@ using cGUI.Animations;
 using cGUI.Elements.Models;
 using cGUI.Event.Abstraction;
 using cGUI.Events.Models.Layout;
-using cGUI.Math;
 
 namespace cGUI.Elements.BaseElements;
 
@@ -13,6 +12,7 @@ public class ToggleElement : ClickableElement, IEventHandler<PostLayoutEvent>
     private readonly GUIColor[] m_OnColor;
     private readonly GUIColor[] m_OnHoveredColor;
     private readonly GUIColor[] m_OnPressedColor;
+    private readonly GUIColor[] m_OnColorBuffer = new GUIColor[4];
     private readonly StateTween<float> m_ToggleTween;
 
     private bool m_IsOn;
@@ -28,7 +28,7 @@ public class ToggleElement : ClickableElement, IEventHandler<PostLayoutEvent>
         m_OnToggle = onToggle;
         m_IsOn = initialState;
 
-        m_ToggleTween = new StateTween<float>(tweenOptions.ToggleDuration, tweenOptions.ToggleDuration, (a, b, t) => GUIMath.LerpUnclamped(a, b, t), tweenOptions.ToggleEasing);
+        m_ToggleTween = new StateTween<float>(tweenOptions.ToggleDuration, tweenOptions.ToggleDuration, TweenLerp, tweenOptions.ToggleEasing);
     }
 
     public void SetOnToggle(Action<bool>? onToggle) => m_OnToggle = onToggle;
@@ -38,7 +38,8 @@ public class ToggleElement : ClickableElement, IEventHandler<PostLayoutEvent>
         m_HoverTween.Update(m_IsHovered, reason.DeltaTime);
         m_PressTween.Update(m_IsPressed, reason.DeltaTime);
         m_ToggleTween.Update(m_IsOn, reason.DeltaTime);
-        BuildMesh(ComputeColors());
+        ComputeColors();
+        BuildMesh(m_ColorBuffer);
         return IsActive;
     }
 
@@ -48,18 +49,18 @@ public class ToggleElement : ClickableElement, IEventHandler<PostLayoutEvent>
         m_OnToggle?.Invoke(m_IsOn);
     }
 
-    protected override GUIColor[] ComputeColors()
+    protected override void ComputeColors()
     {
         float hoverT = m_HoverTween.Evaluate(0f, 1f);
         float pressT = m_PressTween.Evaluate(0f, 1f);
         float toggleT = m_ToggleTween.Evaluate(0f, 1f);
 
-        var offHovered = LerpColorArrays(m_Color, m_HoveredColor, hoverT);
-        var offStack = LerpColorArrays(offHovered, m_PressedColor, pressT);
+        LerpColors(m_Color, m_HoveredColor, hoverT, m_ColorBuffer);
+        LerpColorsInPlace(m_ColorBuffer, m_PressedColor, pressT);
 
-        var onHovered = LerpColorArrays(m_OnColor, m_OnHoveredColor, hoverT);
-        var onStack = LerpColorArrays(onHovered, m_OnPressedColor, pressT);
+        LerpColors(m_OnColor, m_OnHoveredColor, hoverT, m_OnColorBuffer);
+        LerpColorsInPlace(m_OnColorBuffer, m_OnPressedColor, pressT);
 
-        return LerpColorArrays(offStack, onStack, toggleT);
+        LerpColorsInPlace(m_ColorBuffer, m_OnColorBuffer, toggleT);
     }
 }
