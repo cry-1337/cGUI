@@ -1,62 +1,32 @@
 ﻿using cGUI.Abstraction.Structs;
-using cGUI.Assert;
+using cGUI.Animations;
 using cGUI.Convert.Extensions;
-using cGUI.Elements.Globals;
 using cGUI.Elements.Models;
 using cGUI.Event.Abstraction;
 using cGUI.Events.Models.Input;
 using cGUI.Events.Models.Layout;
-using cGUI.Events.Models.Render;
-using cGUI.Layout.Abstraction;
-using cGUI.Render.Abstraction;
-using cGUI.Unity.Render.Abstraction;
-using cGUI.Unity.Render.Contexts;
-using cGUI.Unity.Render.Extensions;
+using cGUI.Math;
 
 namespace cGUI.Elements.BaseElements;
 
-public class HoverableElement : BaseElement, IEventHandler<MouseMoveEvent>, IEventHandler<PostLayoutEvent>
+public class HoverableElement : SimpleElement, IEventHandler<MouseMoveEvent>, IEventHandler<PostLayoutEvent>
 {
-    private readonly GUIColor[] m_Color;
-    private readonly GUIColor[] m_HoveredColor;
-    private readonly IMeshRenderContext<UnityMeshData> m_Context = new UnityMeshRenderContext();
+    protected readonly GUIColor[] m_HoveredColor;
+    protected readonly StateTween<float> m_HoverTween;
+    protected bool m_IsHovered;
 
-    private LayoutNode m_Node;
-    private bool m_IsHovered;
-
-    public HoverableElement(string id, ElementOption options, GUIColor[] hoveredColor) : base(id)
+    public HoverableElement(string id, ElementOption options, GUIColor[] hoveredColor, ElementTweenOptions tweenOptions = default) : base(id, options)
     {
-        GUIAssert.IsNull(options.DesiredRect, $"DesiredRect is null in {id}");
-        GUIAssert.IsNull(options.Color, $"Color is null in {id}");
-
-        IsActive = true;
         IsHittable = true;
 
-        m_Color = options.Color.Value.Length > 1 ? options.Color.Value : [options.Color.Value[0], options.Color.Value[0], options.Color.Value[0], options.Color.Value[0]];
         m_HoveredColor = hoveredColor;
-
-        m_Node = new LayoutNode(this, options.DesiredRect, options.LayoutOptions);
-    }
-
-    public override void OnRender(RenderEvent reason)
-    {
-        reason.Render.PushMesh(m_Context);
-        m_Context.Clear();
-    }
-
-    public override void OnLayout(LayoutEvent reason)
-    {
-        var layout = reason.Layout;
-        layout.PushNode(m_Node);
+        m_HoverTween = new StateTween<float>(tweenOptions.HoverInDuration, tweenOptions.HoverOutDuration, (a, b, t) => GUIMath.LerpUnclamped(a, b, t), tweenOptions.HoverEasing);
     }
 
     bool IEventHandler<PostLayoutEvent>.Handle(PostLayoutEvent reason)
     {
-        var color = m_IsHovered ? m_HoveredColor : m_Color;
-        var meshData = new UnityMeshData(GUIGlobals.GlobalMaterial!);
-
-        m_Context.AddRect(Bounds, color[0], color[1], color[2], color[3], ref meshData);
-
+        m_HoverTween.Update(m_IsHovered, reason.DeltaTime);
+        BuildMesh(ComputeColors());
         return IsActive;
     }
 
@@ -64,5 +34,23 @@ public class HoverableElement : BaseElement, IEventHandler<MouseMoveEvent>, IEve
     {
         m_IsHovered = HitTest(reason.GlobalMousePosition.ToPoint(), out var _);
         return IsActive && IsHittable;
+    }
+
+    protected virtual GUIColor[] ComputeColors()
+    {
+        float t = m_HoverTween.Evaluate(0f, 1f);
+        return LerpColorArrays(m_Color, m_HoveredColor, t);
+    }
+
+    protected static GUIColor[] LerpColorArrays(GUIColor[] from, GUIColor[] to, float t)
+    {
+        var result = new GUIColor[from.Length];
+
+        for (int i = 0; i < from.Length; i++)
+        {
+            result[i] = new GUIColor(from[i]).Lerp(to[i], t);
+        }
+
+        return result;
     }
 }
