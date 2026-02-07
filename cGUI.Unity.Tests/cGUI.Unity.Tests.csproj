@@ -3,7 +3,10 @@
   <ItemGroup>
     <ProjectReference Include="..\cGUI.Abstraction\cGUI.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Animations\cGUI.Animations.csproj" />
+    <ProjectReference Include="..\cGUI.Assert\cGUI.Assert.csproj" />
     <ProjectReference Include="..\cGUI.Convert.Extensions\cGUI.Convert.Extensions.csproj" />
+    <ProjectReference Include="..\cGUI.Elements.BaseElements\cGUI.Elements.BaseElements.csproj" />
+    <ProjectReference Include="..\cGUI.Elements.Globals\cGUI.Elements.Globals.csproj" />
     <ProjectReference Include="..\cGUI.Elements.Models\cGUI.Elements.Models.csproj" />
     <ProjectReference Include="..\cGUI.Event.Abstraction\cGUI.Event.Abstraction.csproj" />
     <ProjectReference Include="..\cGUI.Event.Extensions\cGUI.Event.Extensions.csproj" />
