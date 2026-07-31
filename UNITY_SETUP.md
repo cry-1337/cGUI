@@ -67,6 +67,8 @@ public class UIManager : MonoBehaviour
             m_EventDispatcher.Register(m_RootElement, layoutHandler);
         if (m_RootElement is IEventHandler<PostLayoutEvent> postLayoutHandler)
             m_EventDispatcher.Register(m_RootElement, postLayoutHandler);
+        if (m_RootElement is IEventHandler<PreRenderEvent> preRenderHandler)
+            m_EventDispatcher.Register(m_RootElement, preRenderHandler);
         if (m_RootElement is IEventHandler<MouseMoveEvent> mouseMoveHandler)
             m_EventDispatcher.Register(m_RootElement, mouseMoveHandler);
         if (m_RootElement is IEventHandler<MouseKeyDownEvent> mouseDownHandler)
@@ -79,11 +81,14 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        // 1. Input pass: Dispatch mouse events first
+        DispatchInputEvents();
+
         // Reset layout for new frame
         m_Layout.Reset();
 
-        // 1. Layout pass: Compute element positions
-        var layoutEvent = new LayoutEvent(m_Layout, force: false);
+        // 2. Layout pass: Compute element positions
+        var layoutEvent = new LayoutEvent(m_Layout, force: true);
         m_EventDispatcher.Dispatch(m_RootElement, layoutEvent);
 
         // Perform layout computation
@@ -96,16 +101,17 @@ public class UIManager : MonoBehaviour
         };
         m_Layout.PerformLayout(context, overrideElementsCount: true);
 
-        // 2. Input pass: Dispatch mouse events
-        DispatchInputEvents();
-
-        // 3. Render pass: Push meshes to buffer
-        var renderEvent = new RenderEvent(new UnityRenderAdapter(m_Renderer));
-        m_EventDispatcher.Dispatch(m_RootElement, renderEvent);
-
-        // 4. PostLayout pass: Build color-blended meshes
+        // 3. PostLayout pass: Run post-layout calculations (e.g. nested layouts)
         var postLayoutEvent = new PostLayoutEvent(m_Layout, Time.deltaTime);
         m_EventDispatcher.Dispatch(m_RootElement, postLayoutEvent);
+
+        // 4. PreRender pass: Update animations/tweens and build meshes
+        var preRenderEvent = new PreRenderEvent(Time.deltaTime);
+        m_EventDispatcher.Dispatch(m_RootElement, preRenderEvent);
+
+        // 5. Render pass: Push meshes to buffer
+        var renderEvent = new RenderEvent(new UnityRenderAdapter(m_Renderer));
+        m_EventDispatcher.Dispatch(m_RootElement, renderEvent);
 
         // 5. Flush buffer: Render all accumulated meshes
         m_Renderer.ProcessBuffer();
@@ -188,22 +194,25 @@ Each frame executes in order:
 
 ```
 Update() {
+    // 1. Input Phase
+    DispatchInputEvents()              // Mouse move/click → MouseMoveEvent, MouseKeyDown/UpEvent
+
     m_Layout.Reset()
 
-    // 1. Layout Phase
+    // 2. Layout Phase
     DispatchLayoutEvent()              // Tells elements to register their nodes
     m_Layout.PerformLayout()           // Computes positions for all nodes
 
-    // 2. Input Phase
-    DispatchInputEvents()              // Mouse move/click → MouseMoveEvent, MouseKeyDown/UpEvent
+    // 3. PostLayout Phase
+    DispatchPostLayoutEvent()          // Containers run child layouts
 
-    // 3. Render Phase
+    // 4. PreRender Phase
+    DispatchPreRenderEvent()           // Elements update tweens and build colored meshes
+
+    // 5. Render Phase
     DispatchRenderEvent()              // Elements push meshes to UnityMeshRender buffer
 
-    // 4. PostLayout Phase
-    DispatchPostLayoutEvent()          // Elements update tweens and build colored meshes
-
-    // 5. GPU Flush
+    // 6. GPU Flush
     m_Renderer.ProcessBuffer()         // Accumulates all meshes and calls Graphics.ExecuteCommandBuffer() once
 }
 ```
@@ -234,7 +243,7 @@ Before: Each element called `ProcessBuffer()` immediately → stale mesh referen
 Now: `PushMesh()` just appends data, `ProcessBuffer()` called once → correct batching
 
 ### 3. Color Tweens Update Every Frame
-In `PostLayoutEvent`, each element:
+In `PreRenderEvent`, each element:
 - Updates its `StateTween<float>` with current frame delta
 - Computes blended colors (Normal → Hover → Press → Toggle)
 - Builds mesh with blended colors
@@ -297,7 +306,7 @@ var button = new ButtonElement("btn", options, /* colors... */, tweenOptions: op
 - Verify `ProcessBuffer()` is called once per frame
 
 ### Colors animating too fast/slow
-- Check `Time.deltaTime` is passed to `PostLayoutEvent`
+- Check `Time.deltaTime` is passed to `PreRenderEvent`
 - Verify `ElementTweenOptions` durations (in seconds)
 
 ### Input not working

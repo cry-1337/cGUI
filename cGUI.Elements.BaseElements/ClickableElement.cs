@@ -1,14 +1,15 @@
-﻿using cGUI.Abstraction.Structs;
+using cGUI.Abstraction.Structs;
 using cGUI.Animations;
 using cGUI.Convert.Extensions;
 using cGUI.Elements.Models;
 using cGUI.Event.Abstraction;
 using cGUI.Events.Models.Input;
 using cGUI.Events.Models.Layout;
+using cGUI.Events.Models.Render;
 
 namespace cGUI.Elements.BaseElements;
 
-public class ClickableElement : HoverableElement, IEventHandler<MouseKeyDownEvent>, IEventHandler<MouseKeyUpEvent>, IEventHandler<PostLayoutEvent>
+public class ClickableElement : HoverableElement, IEventHandler<MouseKeyDownEvent>, IEventHandler<MouseKeyUpEvent>, IEventHandler<PreRenderEvent>
 {
     protected readonly GUIColor[] m_PressedColor;
     protected readonly StateTween<float> m_PressTween;
@@ -20,7 +21,7 @@ public class ClickableElement : HoverableElement, IEventHandler<MouseKeyDownEven
         m_PressTween = new StateTween<float>(tweenOptions.PressInDuration, tweenOptions.PressOutDuration, TweenLerp, tweenOptions.PressEasing);
     }
 
-    bool IEventHandler<PostLayoutEvent>.Handle(PostLayoutEvent reason)
+    bool IEventHandler<PreRenderEvent>.Handle(PreRenderEvent reason)
     {
         m_HoverTween.Update(m_IsHovered, reason.DeltaTime);
         m_PressTween.Update(m_IsPressed, reason.DeltaTime);

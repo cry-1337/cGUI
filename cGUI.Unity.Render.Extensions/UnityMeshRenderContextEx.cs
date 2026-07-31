@@ -1,4 +1,4 @@
-﻿using cGUI.Abstraction.Structs;
+using cGUI.Abstraction.Structs;
 using cGUI.Render.Abstraction;
 using cGUI.Unity.Render.Abstraction;
 using UnityEngine;
@@ -58,6 +58,16 @@ public static class UnityMeshRenderContextEx
             var v2 = new Vertex(new(rect.X + rect.Width, rect.Y), colBotRight, default);
             var v3 = new Vertex(new(rect.X + rect.Width, rect.Y + rect.Height), colTopRight, default);
             var v4 = new Vertex(new(rect.X, rect.Y + rect.Height), colTopLeft, default);
+
+            ctx.AddQuad(v1, v2, v3, v4, ref meshData);
+        }
+
+        public void AddRectWithUV(in GUIRectangle rect, in GUIRectangle uvRect, in GUIColor color, ref UnityMeshData meshData)
+        {
+            var v1 = new Vertex(new(rect.X, rect.Y), color, new(uvRect.X, uvRect.Y));
+            var v2 = new Vertex(new(rect.X + rect.Width, rect.Y), color, new(uvRect.X + uvRect.Width, uvRect.Y));
+            var v3 = new Vertex(new(rect.X + rect.Width, rect.Y + rect.Height), color, new(uvRect.X + uvRect.Width, uvRect.Y + uvRect.Height));
+            var v4 = new Vertex(new(rect.X, rect.Y + rect.Height), color, new(uvRect.X, uvRect.Y + uvRect.Height));
 
             ctx.AddQuad(v1, v2, v3, v4, ref meshData);
         }

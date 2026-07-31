@@ -14,8 +14,10 @@ By leveraging an abstract rendering context (`IMeshRenderContext`), cGUI can be 
 
 ## 🔥 Key Features
 
-* **Zero-GC Core:** No `GC.Alloc` during layout calculation, element updates, or mesh assembly.
-* **Modular Element System:** A specialized architecture for building UI components (Buttons, Panels, Labels) that works independently of engine-specific objects like MonoBehaviours.
+* **Zero-GC Core:** No `GC.Alloc` during layout calculation, element updates, zero-alloc text rendering, or mesh assembly.
+* **Modular Element System:** A specialized architecture for building UI components (Buttons, Panels, ScrollPanels, TextElements) that works independently of engine-specific objects like MonoBehaviours.
+* **Zero-GC Text Rendering:** High-speed bitmap font atlas text rendering with in-place number formatting and zero string heap allocations per frame.
+* **Scrollable Containers & Clipping:** Flexible `ScrollPanelElement` with `IScrollable` interface and pixel-perfect UV scissor clipping.
 * **Abstract Rendering Context:** Easily implement your own backend by fulfilling the `IMeshRenderContext` interface.
 * **Blittable Data Handling:** Optimized for high-speed memory copying (blitting) of vertex and index data, ideal for modern graphics APIs.
 * **XR & Mobile Optimized:** Dramatically reduces CPU overhead and thermal throttling, ensuring a rock-solid frame rate for performance-critical applications.
@@ -25,21 +27,19 @@ By leveraging an abstract rendering context (`IMeshRenderContext`), cGUI can be 
 ### Boxing Prevention
 The core of cGUI's performance lies in its generic implementation. By using a generic render context and element system, the library avoids the common pitfall of "Interface Boxing"—where a struct-based element is cast to an interface and moved to the heap.
 
-
-
 ### Lightweight Element System
 Unlike standard Unity UI elements that are heavy `MonoBehaviour` objects, cGUI elements are designed to be lightweight. They function within a managed lifecycle that minimizes overhead while providing the flexibility to build complex, nested layouts.
 
 ### Memory Efficiency
 * **`ref` & `in` Parameters:** Heavy vertex and element data are passed by reference to minimize stack copying.
-* **Capacity Pre-allocation:** Render contexts and element buffers are designed to be reused with pre-allocated internal arrays, preventing array resizing during critical frames.
+* **Capacity Pre-allocation:** Render contexts, element buffers, and text character buffers are designed to be reused with pre-allocated internal arrays, preventing array resizing during critical frames.
 
 ## 📊 Performance Comparison
 
 | Metric | Standard UI Frameworks | **cGUI** |
 | :--- | :--- | :--- |
-| **GC Pressure** | High (Layout/Rebuild) | **Zero (Stable)** |
-| **Object Model** | Class-based (Reference Types) | **Struct-based (Value Types)** |
+| **GC Pressure** | High (Layout/Rebuild/Text) | **Zero (Stable)** |
+| **Object Model** | Class-based (Reference Types) | **Struct-based / Pre-allocated** |
 | **Backend** | Engine-Locked | **Engine-Agnostic** |
 | **Memory Locality** | Poor (Heap Scatter) | **Excellent (Contiguous)** |
 | **Boxing** | Common (Interfaces/Enums) | **Eliminated (Generics)** |
@@ -47,7 +47,7 @@ Unlike standard Unity UI elements that are heavy `MonoBehaviour` objects, cGUI e
 ## 🎯 Ideal Use Cases
 
 1.  **Engine-Agnostic Tools:** Libraries and tools that need to run across different game engines or custom frameworks.
-2.  **High-Frequency HUDs:** Real-time tactical displays and mini-maps updating every frame.
+2.  **High-Frequency HUDs & Text:** Real-time tactical displays, FPS counters, and mini-maps updating every frame without GC spikes.
 3.  **XR Overlays:** Performance-critical interfaces for Meta Quest, Vision Pro, and other mobile XR headsets.
 4.  **Professional Editor Tools:** Creating responsive, data-heavy custom editors without interface lag.
 
