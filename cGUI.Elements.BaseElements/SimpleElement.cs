@@ -1,4 +1,5 @@
-﻿using cGUI.Abstraction.Structs;
+using cGUI.Abstraction.Interfaces;
+using cGUI.Abstraction.Structs;
 using cGUI.Assert;
 using cGUI.Elements.Globals;
 using cGUI.Elements.Models;
@@ -6,6 +7,7 @@ using cGUI.Event.Abstraction;
 using cGUI.Events.Models.Layout;
 using cGUI.Events.Models.Render;
 using cGUI.Layout.Abstraction;
+using cGUI.Math;
 using cGUI.Render.Abstraction;
 using cGUI.Unity.Render.Abstraction;
 using cGUI.Unity.Render.Contexts;
@@ -13,7 +15,7 @@ using cGUI.Unity.Render.Extensions;
 
 namespace cGUI.Elements.BaseElements;
 
-public class SimpleElement : BaseElement, IEventHandler<PostLayoutEvent>
+public class SimpleElement : BaseElement, IEventHandler<PreRenderEvent>
 {
     protected readonly GUIColor[] m_Color;
     protected readonly IMeshRenderContext<UnityMeshData> m_Context = new UnityMeshRenderContext();
@@ -42,7 +44,7 @@ public class SimpleElement : BaseElement, IEventHandler<PostLayoutEvent>
         reason.Layout.PushNode(m_Node);
     }
 
-    bool IEventHandler<PostLayoutEvent>.Handle(PostLayoutEvent reason)
+    bool IEventHandler<PreRenderEvent>.Handle(PreRenderEvent reason)
     {
         BuildMesh(m_Color);
         return IsActive;
@@ -51,6 +53,11 @@ public class SimpleElement : BaseElement, IEventHandler<PostLayoutEvent>
     protected void BuildMesh(GUIColor[] colors)
     {
         var meshData = new UnityMeshData(GUIGlobals.GlobalMaterial!);
-        m_Context.AddRect(Bounds, colors[0], colors[1], colors[2], colors[3], ref meshData);
+        GUIRectangle drawBounds = ClippingUtility.GetClippedBounds(this, Bounds);
+
+        if (drawBounds.Width > 0 && drawBounds.Height > 0)
+        {
+            m_Context.AddRect(drawBounds, colors[0], colors[1], colors[2], colors[3], ref meshData);
+        }
     }
 }

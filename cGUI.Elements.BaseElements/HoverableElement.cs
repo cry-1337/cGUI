@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using cGUI.Abstraction.Structs;
 using cGUI.Animations;
 using cGUI.Convert.Extensions;
@@ -6,11 +6,12 @@ using cGUI.Elements.Models;
 using cGUI.Event.Abstraction;
 using cGUI.Events.Models.Input;
 using cGUI.Events.Models.Layout;
+using cGUI.Events.Models.Render;
 using cGUI.Math;
 
 namespace cGUI.Elements.BaseElements;
 
-public class HoverableElement : SimpleElement, IEventHandler<MouseMoveEvent>, IEventHandler<PostLayoutEvent>
+public class HoverableElement : SimpleElement, IEventHandler<MouseMoveEvent>, IEventHandler<PreRenderEvent>
 {
     protected static readonly Func<float, float, float, float> TweenLerp = GUIMath.LerpUnclamped;
 
@@ -27,7 +28,7 @@ public class HoverableElement : SimpleElement, IEventHandler<MouseMoveEvent>, IE
         m_HoverTween = new StateTween<float>(tweenOptions.HoverInDuration, tweenOptions.HoverOutDuration, TweenLerp, tweenOptions.HoverEasing);
     }
 
-    bool IEventHandler<PostLayoutEvent>.Handle(PostLayoutEvent reason)
+    bool IEventHandler<PreRenderEvent>.Handle(PreRenderEvent reason)
     {
         m_HoverTween.Update(m_IsHovered, reason.DeltaTime);
         ComputeColors();

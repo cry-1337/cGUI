@@ -1,13 +1,14 @@
-﻿using System;
+using System;
 using cGUI.Abstraction.Structs;
 using cGUI.Animations;
 using cGUI.Elements.Models;
 using cGUI.Event.Abstraction;
 using cGUI.Events.Models.Layout;
+using cGUI.Events.Models.Render;
 
 namespace cGUI.Elements.BaseElements;
 
-public class ToggleElement : ClickableElement, IEventHandler<PostLayoutEvent>
+public class ToggleElement : ClickableElement, IEventHandler<PreRenderEvent>
 {
     private readonly GUIColor[] m_OnColor;
     private readonly GUIColor[] m_OnHoveredColor;
@@ -18,7 +19,11 @@ public class ToggleElement : ClickableElement, IEventHandler<PostLayoutEvent>
     private bool m_IsOn;
     private Action<bool>? m_OnToggle;
 
-    public bool IsOn => m_IsOn;
+    public bool IsOn
+    {
+        get => m_IsOn;
+        set => m_IsOn = value;
+    }
 
     public ToggleElement(string id, ElementOption options, GUIColor[] hoveredColor, GUIColor[] pressedColor, GUIColor[] onColor, GUIColor[] onHoveredColor, GUIColor[] onPressedColor, Action<bool>? onToggle = null, bool initialState = false, ElementTweenOptions tweenOptions = default) : base(id, options, hoveredColor, pressedColor, tweenOptions)
     {
@@ -33,7 +38,7 @@ public class ToggleElement : ClickableElement, IEventHandler<PostLayoutEvent>
 
     public void SetOnToggle(Action<bool>? onToggle) => m_OnToggle = onToggle;
 
-    bool IEventHandler<PostLayoutEvent>.Handle(PostLayoutEvent reason)
+    bool IEventHandler<PreRenderEvent>.Handle(PreRenderEvent reason)
     {
         m_HoverTween.Update(m_IsHovered, reason.DeltaTime);
         m_PressTween.Update(m_IsPressed, reason.DeltaTime);

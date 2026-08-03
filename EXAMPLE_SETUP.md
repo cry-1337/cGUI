@@ -2,13 +2,15 @@
 
 ## Overview
 
-This example demonstrates the complete element system with animated color transitions:
+This example demonstrates the complete element system with animated color transitions and Zero-GC text rendering:
 
 - **SimpleElement**: Static colored rectangles (no interaction)
 - **HoverableElement**: Smooth color transition on mouse hover
 - **ButtonElement**: Click detection with hover + press feedback
 - **ToggleElement**: On/off state with dual color sets
 - **PanelElement**: Container for nesting elements with background + padding
+- **ScrollPanelElement**: Scrollable container panel with automatic clipping
+- **TextElement**: Zero-GC text rendering via bitmap font atlas
 
 ## Setup Instructions
 
@@ -41,10 +43,12 @@ Create a Material using the shader:
 
 The example uses **accumulated buffer rendering**. Each frame:
 
-1. **Render Phase**: Elements push mesh data to `UnityMeshRender` buffer
+1. **Input Phase**: Input events are processed first
 2. **Layout Phase**: Layout system positions all elements
-3. **PostLayout Phase**: Elements build their color-blended meshes
-4. **Buffer Flush**: Single `ProcessBuffer()` call accumulates and renders all at once
+3. **PostLayout Phase**: Containers perform child layouts
+4. **PreRender Phase**: Elements build their color-blended meshes
+5. **Render Phase**: Elements push mesh data to `UnityMeshRender` buffer
+6. **Buffer Flush**: Single `ProcessBuffer()` call accumulates and renders all at once
 
 For example, 5 elements = 1 mesh + 5 draw calls (not 5 meshes × 5 GPU submissions)
 
@@ -61,7 +65,8 @@ RootPanel (PanelElement)
     │   ├── IncrementButton (ButtonElement)
     │   └── DecrementButton (ButtonElement)
     ├── ToggleLabel (SimpleElement)
-    └── ToggleSwitch (ToggleElement)
+    ├── ToggleSwitch (ToggleElement)
+    └── StatusText (TextElement) [Zero-GC]
 ```
 
 ## Element Types Explained
@@ -179,6 +184,32 @@ if (panel.Has("ButtonID")) { /* ... */ }
 var button = panel.Find("ButtonID");
 ```
 
+### ScrollPanelElement
+Container for scrollable child elements with viewport clipping and MaxScroll auto-calculation.
+
+```csharp
+var scrollPanel = new ScrollPanelElement(
+    "ScrollPanel",
+    new ElementOption { DesiredRect = new GUIRectangle(10, 10, 300, 400), Color = new ElementColor(new GUIColor(30, 30, 30)) },
+    padding: 10f
+);
+
+// Scroll position control
+scrollPanel.ScrollY += 20f;
+scrollPanel.ConstrainScroll();
+```
+
+### TextElement
+Zero-GC text rendering using FontAtlas. Formats strings and numbers without heap allocations.
+
+```csharp
+var fontAtlas = FontAtlas.CreateGridAtlas(charWidth: 8f, charHeight: 16f);
+var label = new TextElement("FPSCounter", options, fontAtlas, initialText: "FPS: 144");
+
+// Zero-GC integer update (no string allocation per frame)
+label.SetText(currentFps);
+```
+
 ## Color Animations
 
 ### Three-Level Blend Stack
@@ -252,7 +283,7 @@ new ChangeRectOption(new GUIRectangle(100, 100, 200, 200))
 - Color buffers pre-allocated in element constructors
 - In-place lerp operations
 - Shared tween lerp delegate across all elements
-- ToggleElement: **0 allocations/frame** (was 5 before optimization)
+- TextElement & ToggleElement: **0 allocations/frame**
 
 ### Efficient Rendering
 - `UnityMeshRender` accumulates all mesh data with rebased offsets
@@ -261,58 +292,9 @@ new ChangeRectOption(new GUIRectangle(100, 100, 200, 200))
 - Now: All elements batched correctly
 
 ### Event Dispatch
-- `RenderEvent` → `LayoutEvent` → `PostLayoutEvent` → Input events
+- Input events → `LayoutEvent` → `PostLayoutEvent` → `PreRenderEvent` → `RenderEvent`
 - Input events (`MouseMoveEvent`, `MouseKeyDownEvent`, `MouseKeyUpEvent`)
 - `VisualContainer.HandleEvents()` cascades to children
-
-## Extending the System
-
-### Custom Element Type
-
-```csharp
-public class SliderElement : HoverableElement
-{
-    private float m_Value = 0.5f;
-
-    public float Value => m_Value;
-
-    public SliderElement(string id, ElementOption options, /* ... */)
-        : base(id, options, /* ... */)
-    {
-    }
-
-    protected override void OnClick()
-    {
-        // Custom behavior
-        m_Value = GetValueFromMousePos();
-    }
-
-    protected override void ComputeColors()
-    {
-        base.ComputeColors();
-        // Could apply additional effects
-    }
-}
-```
-
-### Custom Layout Option
-
-```csharp
-public struct AspectRatioOption(float ratio) : ILayoutOption
-{
-    public GUIRectangle ProcessLayout(GUIRectangle desiredRect, ref LayoutContext context)
-    {
-        float maxWidth = context.RemainingRect.Width;
-        float maxHeight = maxWidth / ratio;
-
-        return new GUIRectangle(
-            context.RemainingRect.X,
-            context.RemainingRect.Y,
-            maxWidth,
-            maxHeight);
-    }
-}
-```
 
 ## Troubleshooting
 
@@ -327,7 +309,7 @@ public struct AspectRatioOption(float ratio) : ILayoutOption
 - Check `GUIColor` constructor usage
 
 ### Animations stuttering
-- Verify `PostLayoutEvent.DeltaTime` is per-frame
+- Verify `PreRenderEvent.DeltaTime` is per-frame
 - Check that `ProcessBuffer()` is called once per frame
 - Confirm tweens are using correct easing type
 
