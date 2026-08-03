@@ -40,21 +40,7 @@ public class TextElement : BaseElement, IEventHandler<PreRenderEvent>
         TextColor = options.Color.ToQuadColors()[0];
         m_Node = new LayoutNode(this, options.DesiredRect, options.LayoutOptions);
 
-        SetText(initialText.AsSpan());
-    }
-
-    /// <summary>
-    /// Sets text without any heap allocations (Zero-GC).
-    /// </summary>
-    public void SetText(ReadOnlySpan<char> text)
-    {
-        if (text.Length > m_TextBuffer.Length)
-        {
-            Array.Resize(ref m_TextBuffer, text.Length + 64);
-        }
-
-        text.CopyTo(m_TextBuffer);
-        m_TextLength = text.Length;
+        SetText(initialText);
     }
 
     /// <summary>
@@ -62,12 +48,47 @@ public class TextElement : BaseElement, IEventHandler<PreRenderEvent>
     /// </summary>
     public void SetText(string text)
     {
-        if (text == null)
+        if (string.IsNullOrEmpty(text))
         {
             m_TextLength = 0;
             return;
         }
-        SetText(text.AsSpan());
+
+        if (text.Length > m_TextBuffer.Length)
+        {
+            Array.Resize(ref m_TextBuffer, text.Length + 64);
+        }
+
+        text.CopyTo(0, m_TextBuffer, 0, text.Length);
+        m_TextLength = text.Length;
+    }
+
+    /// <summary>
+    /// Sets text from character array without string allocation.
+    /// </summary>
+    public void SetText(char[] buffer, int length)
+    {
+        SetText(buffer, 0, length);
+    }
+
+    /// <summary>
+    /// Sets text from character array range without string allocation.
+    /// </summary>
+    public void SetText(char[] buffer, int startIndex, int length)
+    {
+        if (buffer == null || length <= 0)
+        {
+            m_TextLength = 0;
+            return;
+        }
+
+        if (length > m_TextBuffer.Length)
+        {
+            Array.Resize(ref m_TextBuffer, length + 64);
+        }
+
+        Array.Copy(buffer, startIndex, m_TextBuffer, 0, length);
+        m_TextLength = length;
     }
 
     /// <summary>
@@ -132,27 +153,7 @@ public class TextElement : BaseElement, IEventHandler<PreRenderEvent>
         if (m_TextLength == 0 || FontAtlas == null) return IsActive;
 
         var meshData = new UnityMeshData(GUIGlobals.GlobalMaterial!);
-        GUIRectangle drawBounds = Bounds;
-
-        // Clip against IScrollable parents
-        var parent = Parent;
-        while (parent != null)
-        {
-            if (parent is IScrollable scrollable && scrollable.SupportsScroll)
-            {
-                var parentBounds = parent.Bounds;
-                float x1 = GUIMath.Max(drawBounds.X, parentBounds.X);
-                float y1 = GUIMath.Max(drawBounds.Y, parentBounds.Y);
-                float x2 = GUIMath.Min(drawBounds.X + drawBounds.Width, parentBounds.X + parentBounds.Width);
-                float y2 = GUIMath.Min(drawBounds.Y + drawBounds.Height, parentBounds.Y + parentBounds.Height);
-
-                float w = GUIMath.Max(0f, x2 - x1);
-                float h = GUIMath.Max(0f, y2 - y1);
-
-                drawBounds = new GUIRectangle(x1, y1, w, h);
-            }
-            parent = parent.Parent;
-        }
+        GUIRectangle drawBounds = ClippingUtility.GetClippedBounds(this, Bounds);
 
         if (drawBounds.Width <= 0 || drawBounds.Height <= 0) return IsActive;
 

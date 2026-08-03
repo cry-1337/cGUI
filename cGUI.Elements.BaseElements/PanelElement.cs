@@ -51,26 +51,7 @@ public class PanelElement : VisualContainer<BaseElement>, IEventHandler<RenderEv
     {
         m_Context.Clear();
         var meshData = new UnityMeshData(GUIGlobals.GlobalMaterial!);
-        GUIRectangle drawBounds = Bounds;
-        
-        var parent = Parent;
-        while (parent != null)
-        {
-            if (parent is IScrollable scrollable && scrollable.SupportsScroll)
-            {
-                var parentBounds = parent.Bounds;
-                float x1 = GUIMath.Max(drawBounds.X, parentBounds.X);
-                float y1 = GUIMath.Max(drawBounds.Y, parentBounds.Y);
-                float x2 = GUIMath.Min(drawBounds.X + drawBounds.Width, parentBounds.X + parentBounds.Width);
-                float y2 = GUIMath.Min(drawBounds.Y + drawBounds.Height, parentBounds.Y + parentBounds.Height);
-                
-                float w = GUIMath.Max(0f, x2 - x1);
-                float h = GUIMath.Max(0f, y2 - y1);
-                
-                drawBounds = new GUIRectangle(x1, y1, w, h);
-            }
-            parent = parent.Parent;
-        }
+        GUIRectangle drawBounds = ClippingUtility.GetClippedBounds(this, Bounds);
 
         if (drawBounds.Width > 0 && drawBounds.Height > 0)
         {
